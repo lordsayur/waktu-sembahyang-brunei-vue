@@ -52,8 +52,17 @@
 </template>
 
 <script>
+// Component 
+  import DisplayInfo from '@/components/DisplayInfo';
+  import CountDown from '@/components/CountDown';
+  
   export default {
     name: 'Home',
+    components: {
+      'display-info': DisplayInfo,
+      'count-down': CountDown,
+    },
+
     data () {
       return {
         colors: [
