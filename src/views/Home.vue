@@ -19,23 +19,31 @@
           justify="center"
         >
           <v-col class="text-center">
-            <!-- DATE  -->
-            <div class="date">
-              <span>{{ date.masihi }}</span>
-              <span class="divider">|</span>
-              <span>{{ date.hijrah }}</span>
-            </div>
+
             <!-- DAY -->
             <h1>{{ day }}</h1>
+            <!-- DATE  -->
+            <display-info 
+              class="date"
+              :left-text="day.date.masihi" 
+              middle-text="|" 
+              :right-text="day.date.hijrah" 
+            />
+
             <!-- TIMER -->
             <count-down :time="10" prayer="Maghrib"/>
 
             <!-- PRAYER TIME -->
-            <div v-for="(prayer, index) in prayers" :key="index" class="d-flex justify-center">
-              <span>{{ prayer.name }}</span>
-              <span class="divider">:</span>
-              <span>{{prayer.time}} {{ prayer.state}}</span>
-            </div>
+            <display-info 
+              v-for="(prayer, index) in day.prayers" 
+              :key="index"
+              class="prayer"
+              :left-text="prayer.name" 
+              middle-text=":" 
+              :right-text="`${prayer.time} ${prayer.state}`"
+              :isActive="prayer.name === 'Zuhur'"
+            />
+
           </v-col>
         </v-row>
       </v-sheet>
@@ -104,7 +112,7 @@
 .date{
   font-size: .8rem;
 }
-.divider{
-  padding:0 2.5vw;
+.prayer{
+  font-size: 1.5rem;
 }
 </style>
