@@ -1,52 +1,22 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+<v-app>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+  <v-content>
+    <router-view></router-view>
+  </v-content>
 
-      <v-spacer></v-spacer>
+    <wsb-bottom-navigation></wsb-bottom-navigation>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-content>
-      <HelloWorld />
-    </v-content>
-  </v-app>
+</v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import WSBBottomNavigation from "@/components/BottomNavigation.vue";
 
 export default {
   name: "App",
-
-  components: {
-    HelloWorld
+    components: {
+    'wsb-bottom-navigation':WSBBottomNavigation
   },
 
   data: () => ({
