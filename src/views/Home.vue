@@ -9,7 +9,7 @@
       :key="i"
     >
       <v-sheet
-        :color="color"
+        color="transparent"
         height="100%"
         tile
       >
