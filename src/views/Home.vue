@@ -28,9 +28,8 @@
             <!-- DAY -->
             <h1>{{ day }}</h1>
             <!-- TIMER -->
-            <div>
-              <p>111 minit lagi kn masuk waktu Maghrib</p>
-            </div>
+            <count-down :time="10" prayer="Maghrib"/>
+
             <!-- PRAYER TIME -->
             <div v-for="(prayer, index) in prayers" :key="index" class="d-flex justify-center">
               <span>{{ prayer.name }}</span>
