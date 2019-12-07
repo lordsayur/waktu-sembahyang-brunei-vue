@@ -5,8 +5,8 @@
     :show-arrows="false"
   >
     <v-carousel-item
-      v-for="(color, i) in colors"
-      :key="i"
+      v-for="(day, index) in days"
+      :key="index"
     >
       <v-sheet
         color="transparent"
@@ -21,7 +21,8 @@
           <v-col class="text-center">
 
             <!-- DAY -->
-            <h1>{{ day }}</h1>
+            <h1>{{ day.name }}</h1>
+
             <!-- DATE  -->
             <display-info 
               class="date"
@@ -65,53 +66,52 @@
 
     data () {
       return {
-        colors: [
-          'blue-grey darken-1',
-          'blue-grey darken-1',
-          'blue-grey darken-1'
+        days: [
+          {
+            name: "Isnin",
+            date: {
+              hijrah: '10 RABIULAKHIR  1441',
+              masihi: '17 DECEMBER 2019',
+            },
+            prayers: [
+              {
+                name: 'Imsak',
+                time: '05:00',
+                state: 'am'
+              },
+              {
+                name: 'Subuh',
+                time: '05:00',
+                state: 'am'
+              },
+              {
+                name: 'Dhuha',
+                time: '05:00',
+                state: 'am'
+              },
+              {
+                name: 'Zuhur',
+                time: '05:00',
+                state: 'pm'
+              },
+              {
+                name: 'Asar',
+                time: '05:00',
+                state: 'pm'
+              },
+              {
+                name: 'Maghrib',
+                time: '05:00',
+                state: 'pm'
+              },
+              {
+                name: 'Isya',
+                time: '05:00',
+                state: 'pm'
+              },
+            ]
+          },
         ],
-        date: {
-          hijrah: '10 RABIULAKHIR  1441',
-          masihi: '17 DECEMBER 2019',
-        },
-        day: "Isnin",
-        prayers: [
-          {
-            name: 'Imsak',
-            time: '05:00',
-            state: 'am'
-          },
-          {
-            name: 'Subuh',
-            time: '05:00',
-            state: 'am'
-          },
-          {
-            name: 'Dhuha',
-            time: '05:00',
-            state: 'am'
-          },
-          {
-            name: 'Zuhur',
-            time: '05:00',
-            state: 'pm'
-          },
-          {
-            name: 'Asar',
-            time: '05:00',
-            state: 'pm'
-          },
-          {
-            name: 'Maghrib',
-            time: '05:00',
-            state: 'pm'
-          },
-          {
-            name: 'Isya',
-            time: '05:00',
-            state: 'pm'
-          },
-        ]
       }
     },
   }
