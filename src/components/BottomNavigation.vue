@@ -5,7 +5,7 @@
     horizontal
     grow
     background-color="blue-grey darken-2"
-    color="white"
+    color="yellow"
   >
 
     <v-btn v-for="(district, index) in districts" :key="index" height="100%" :value="district.value">
