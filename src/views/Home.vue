@@ -1,50 +1,33 @@
 <template>
-  <v-carousel 
-    height="100%"
-    hide-delimiter-background 
-    :show-arrows="false"
-  >
-    <v-carousel-item
-      v-for="(day, index) in days"
-      :key="index"
-    >
-      <v-sheet
-        color="transparent"
-        height="100%"
-        tile
-      >
-        <v-row
-          class="fill-height"
-          align="center"
-          justify="center"
-        >
+  <v-carousel height="100%" hide-delimiter-background :show-arrows="false">
+    <v-carousel-item v-for="(day, index) in days" :key="index">
+      <v-sheet color="transparent" height="100%" tile>
+        <v-row class="fill-height" align="center" justify="center">
           <v-col class="text-center">
-
             <!-- DAY -->
             <h1>{{ day.name }}</h1>
 
             <!-- DATE  -->
-            <display-info 
+            <display-info
               class="date"
-              :left-text="day.date.masihi" 
-              middle-text="|" 
-              :right-text="day.date.hijrah" 
+              :left-text="day.date.masihi"
+              middle-text="|"
+              :right-text="day.date.hijrah"
             />
 
             <!-- TIMER -->
-            <count-down :time="10" prayer="Maghrib"/>
+            <count-down :time="10" prayer="Maghrib" />
 
             <!-- PRAYER TIME -->
-            <display-info 
-              v-for="(prayer, index) in day.prayers" 
+            <display-info
+              v-for="(prayer, index) in day.prayers"
               :key="index"
               class="prayer"
-              :left-text="prayer.name" 
-              middle-text=":" 
+              :left-text="prayer.name"
+              middle-text=":"
               :right-text="`${prayer.time} ${prayer.state}`"
               :isActive="prayer.name === 'Zuhur'"
             />
-
           </v-col>
         </v-row>
       </v-sheet>
@@ -53,72 +36,80 @@
 </template>
 
 <script>
-import { eventBus } from '@/main';
+import { eventBus } from "@/main";
+const moment = require("moment");
 
-// Component 
-  import DisplayInfo from '@/components/DisplayInfo';
-  import CountDown from '@/components/CountDown';
-  
-  export default {
-    name: 'Home',
-    components: {
-      'display-info': DisplayInfo,
-      'count-down': CountDown,
-    },
+// Component
+import DisplayInfo from "@/components/DisplayInfo";
+import CountDown from "@/components/CountDown";
 
-    data () {
-      return {
-        selectedDistrict: 'brunei',
-        days: [
-          {
-            name: "Isnin",
-            date: {
-              hijrah: '10 RABIULAKHIR  1441',
-              masihi: '17 DECEMBER 2019',
-            },
-            prayers: [
-              {
-                name: 'Imsak',
-                time: '05:00',
-                state: 'am'
-              },
-              {
-                name: 'Subuh',
-                time: '05:00',
-                state: 'am'
-              },
-              {
-                name: 'Dhuha',
-                time: '05:00',
-                state: 'am'
-              },
-              {
-                name: 'Zuhur',
-                time: '05:00',
-                state: 'pm'
-              },
-              {
-                name: 'Asar',
-                time: '05:00',
-                state: 'pm'
-              },
-              {
-                name: 'Maghrib',
-                time: '05:00',
-                state: 'pm'
-              },
-              {
-                name: 'Isya',
-                time: '05:00',
-                state: 'pm'
-              },
-            ]
-const moment = require('moment');
+export default {
+  name: "Home",
+  components: {
+    "display-info": DisplayInfo,
+    "count-down": CountDown
+  },
+
+  data() {
+    return {
+      prayerData: {},
+      selectedDistrict: "brunei",
+      days: [
+        {
+          name: "Isnin",
+          date: {
+            hijrah: "10 RABIULAKHIR  1441",
+            masihi: "17 DECEMBER 2019"
           },
-        ],
+          prayers: [
+            {
+              name: "Imsak",
+              time: "05:00",
+              state: "am"
+            },
+            {
+              name: "Subuh",
+              time: "05:00",
+              state: "am"
+            },
+            {
+              name: "Dhuha",
+              time: "05:00",
+              state: "am"
+            },
+            {
+              name: "Zuhur",
+              time: "05:00",
+              state: "pm"
+            },
+            {
+              name: "Asar",
+              time: "05:00",
+              state: "pm"
+            },
+            {
+              name: "Maghrib",
+              time: "05:00",
+              state: "pm"
+            },
+            {
+              name: "Isya",
+              time: "05:00",
+              state: "pm"
+            }
+          ]
+        }
+      ],
+      day: {
+        today: 0,
+        tomorrow: 1,
+        dayAfterTomorrow: 2
       }
+    };
+  },
 
   created() {
+    this.registerEventBus();
     this.days = [];
     this.formatandPushPrayerDataToDays(this.day.today);
     this.formatandPushPrayerDataToDays(this.day.tomorrow);
@@ -129,13 +120,7 @@ const moment = require('moment');
     formatandPushPrayerDataToDays(offsetDay) {
       this.days.push(this.GetPrayerData(offsetDay));
     },
-      this.registerEventBus();
 
-      registerEventBus(){
-        eventBus.$on('districtClicked', data => {
-          this.selectedDistrict = data;
-        })
-      }
     getDateData(dateOffset) {
       var todayDate = moment().add(dateOffset, "day");
       const day_name = this.$store.getters["days/getDisplayDayName"](
@@ -181,14 +166,20 @@ const moment = require('moment');
       return tempObject;
     },
 
+    registerEventBus() {
+      eventBus.$on("districtClicked", data => {
+        this.selectedDistrict = data;
+      });
+    }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-.date{
-  font-size: .8rem;
+.date {
+  font-size: 0.8rem;
 }
-.prayer{
+.prayer {
   font-size: 1.5rem;
 }
 </style>
