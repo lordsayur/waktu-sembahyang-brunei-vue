@@ -5,7 +5,11 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 
+import globalMixin from "@/mixins/global";
+
 Vue.config.productionTip = false;
+
+Vue.mixin(globalMixin);
 
 new Vue({
   router,
