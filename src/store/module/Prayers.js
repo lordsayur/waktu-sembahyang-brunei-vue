@@ -375,5 +375,19 @@ export default {
         Isya: "07:33"
       }
     ]
+  },
+
+  getters: {
+    getPrayerData(state) {
+      return date => {
+        try {
+          var prayer_data = state.prayer_data[date.month][date.day_number];
+          prayer_data.day = date.day_name;
+          return prayer_data;
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    },
   }
 };
