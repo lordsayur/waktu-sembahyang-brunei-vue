@@ -278,101 +278,38 @@ export default {
         Maghrib: "06:14",
         Isya: "07:29"
       },
+    prayer_name: [
       {
-        Date: "24/12/2019",
-        Tarikh: "27 Rabiulakhir 1441",
-        Imsak: "04:51",
-        Subuh: "05:01",
-        Syuruk: "06:24",
-        Duha: "06:49",
-        Zuhur: "12:20",
-        Asar: "03:42",
-        Maghrib: "06:15",
-        Isya: "07:29"
+        name: "Imsak",
+        state: "am"
       },
       {
-        Date: "25/12/2019",
-        Tarikh: "28 Rabiulakhir 1441",
-        Imsak: "04:51",
-        Subuh: "05:01",
-        Syuruk: "06:25",
-        Duha: "06:49",
-        Zuhur: "12:21",
-        Asar: "03:43",
-        Maghrib: "06:15",
-        Isya: "07:30"
+        name: "Subuh",
+        state: "am"
       },
       {
-        Date: "26/12/2019",
-        Tarikh: "29 Rabiulakhir 1441",
-        Imsak: "04:52",
-        Subuh: "05:02",
-        Syuruk: "06:25",
-        Duha: "06:50",
-        Zuhur: "12:21",
-        Asar: "03:43",
-        Maghrib: "06:16",
-        Isya: "07:30"
+        name: "Syuruk",
+        state: "am"
       },
       {
-        Date: "27/12/2019",
-        Tarikh: "30 Rabiulakhir 1441",
-        Imsak: "04:52",
-        Subuh: "05:02",
-        Syuruk: "06:26",
-        Duha: "06:50",
-        Zuhur: "12:22",
-        Asar: "03:44",
-        Maghrib: "06:16",
-        Isya: "07:31"
+        name: "Duha",
+        state: "am"
       },
       {
-        Date: "28/12/2019",
-        Tarikh: "01 Jamadilawal 1441",
-        Imsak: "04:53",
-        Subuh: "05:03",
-        Syuruk: "06:26",
-        Duha: "06:50",
-        Zuhur: "12:22",
-        Asar: "03:44",
-        Maghrib: "06:17",
-        Isya: "07:31"
+        name: "Zuhur",
+        state: "pm"
       },
       {
-        Date: "29/12/2019",
-        Tarikh: "02 Jamadilawal 1441",
-        Imsak: "04:53",
-        Subuh: "05:03",
-        Syuruk: "06:27",
-        Duha: "06:51",
-        Zuhur: "12:23",
-        Asar: "03:45",
-        Maghrib: "06:17",
-        Isya: "07:32"
+        name: "Asar",
+        state: "pm"
       },
       {
-        Date: "30/12/2019",
-        Tarikh: "03 Jamadilawal 1441",
-        Imsak: "04:54",
-        Subuh: "05:04",
-        Syuruk: "06:27",
-        Duha: "06:51",
-        Zuhur: "12:23",
-        Asar: "03:45",
-        Maghrib: "06:18",
-        Isya: "07:32"
+        name: "Maghrib",
+        state: "pm"
       },
       {
-        Date: "31/12/2019",
-        Tarikh: "04 Jamadilawal 1441",
-        Imsak: "04:54",
-        Subuh: "05:04",
-        Syuruk: "06:28",
-        Duha: "06:52",
-        Zuhur: "12:24",
-        Asar: "03:46",
-        Maghrib: "06:18",
-        Isya: "07:33"
+        name: "Isya",
+        state: "pm"
       }
     ]
   },
@@ -389,5 +326,8 @@ export default {
         }
       };
     },
+    getPrayersTime(state) {
+      return state.prayer_name;
+    }
   }
 };
