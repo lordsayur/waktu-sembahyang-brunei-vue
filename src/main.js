@@ -7,6 +7,8 @@ import vuetify from "./plugins/vuetify";
 
 import globalMixin from "@/mixins/global";
 
+export const eventBus = new Vue();
+
 Vue.config.productionTip = false;
 
 Vue.mixin(globalMixin);
