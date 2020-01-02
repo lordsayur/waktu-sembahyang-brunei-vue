@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import { eventBus } from '@/main';
+
 // Component 
   import DisplayInfo from '@/components/DisplayInfo';
   import CountDown from '@/components/CountDown';
@@ -66,6 +68,7 @@
 
     data () {
       return {
+        selectedDistrict: 'brunei',
         days: [
           {
             name: "Isnin",
@@ -112,6 +115,14 @@
             ]
           },
         ],
+      }
+    },
+      this.registerEventBus();
+
+      registerEventBus(){
+        eventBus.$on('districtClicked', data => {
+          this.selectedDistrict = data;
+        })
       }
     },
   }

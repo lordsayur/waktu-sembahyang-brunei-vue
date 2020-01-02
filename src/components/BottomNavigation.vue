@@ -16,26 +16,35 @@
 </template>
 
 <script>
-  export default {
-    name: 'BottomNavigation',
-    data () {
-      return {
-        selectedDistrict: 'brunei',
-        districts: [
-          {
-            name: "Brunei Muara <br> Temburong",
-            value: 'brunei'
-          },
-          {
-            name: "Tutong",
-            value: 'tutong'
-          },
-          {
-            name: "Belait",
-            value: 'belait'
-          },
-        ]
-      }
-    },
+import { eventBus } from '@/main';
+
+export default {
+  name: 'BottomNavigation',
+  data () {
+    return {
+      selectedDistrict: 'brunei',
+      districts: [
+        {
+          name: "Brunei Muara <br> Temburong",
+          value: 'brunei'
+        },
+        {
+          name: "Tutong",
+          value: 'tutong'
+        },
+        {
+          name: "Belait",
+          value: 'belait'
+        },
+      ]
+    }
+  },
+  
+  methods: {
+    updateSelectedDistrict(selectedDistrict){
+      if(this.selectedDistrict === selectedDistrict) return;
+      eventBus.$emit('districtClicked', selectedDistrict);
+    }
   }
+}
 </script>
