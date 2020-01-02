@@ -113,9 +113,21 @@ import { eventBus } from '@/main';
                 state: 'pm'
               },
             ]
+const moment = require('moment');
           },
         ],
       }
+
+  created() {
+    this.days = [];
+    this.formatandPushPrayerDataToDays(this.day.today);
+    this.formatandPushPrayerDataToDays(this.day.tomorrow);
+    this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+  },
+
+  methods: {
+    formatandPushPrayerDataToDays(offsetDay) {
+      this.days.push(this.GetPrayerData(offsetDay));
     },
       this.registerEventBus();
 
@@ -124,7 +136,51 @@ import { eventBus } from '@/main';
           this.selectedDistrict = data;
         })
       }
+    getDateData(dateOffset) {
+      var todayDate = moment().add(dateOffset, "day");
+      const day_name = this.$store.getters["days/getDisplayDayName"](
+        todayDate.day()
+      );
+      const day_number = todayDate.date() - 1;
+      const month = this.$store.getters["months/getComputerMonthName"](
+        todayDate.month()
+      );
+      return {
+        day_name,
+        day_number,
+        month
+      };
     },
+
+    getPrayerData(date) {
+      var prayer_data = this.$store.getters["prayers/getPrayerData"](date);
+      this.wsbPrint("Prayer Data:", prayer_data);
+      return prayer_data;
+    },
+
+    GetPrayerData(offsetDay) {
+      const today_date = this.getDateData(offsetDay);
+      const prayer_data = this.getPrayerData(today_date);
+
+      var tempObject = {};
+      tempObject.name = prayer_data.day;
+      tempObject.date = {};
+      tempObject.date.hijrah = prayer_data.Tarikh;
+      tempObject.date.masihi = prayer_data.Date;
+      tempObject.prayers = [];
+
+      var prayersTime = this.$store.getters["prayers/getPrayersTime"];
+
+      prayersTime.forEach(time => {
+        var tempPrayerObj = {};
+        tempPrayerObj.name = time.name;
+        tempPrayerObj.time = prayer_data[time.name];
+        tempPrayerObj.state = time.state;
+        tempObject.prayers.push(tempPrayerObj);
+      });
+      return tempObject;
+    },
+
   }
 </script>
 
