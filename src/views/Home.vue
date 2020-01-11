@@ -201,6 +201,11 @@ export default {
     }
   },
 
+  computed: {
+    getTodayPrayerTime() {
+      return this.days[0].prayers;
+    },
+
     DisplayPrayerTime() {
       return prayer => {
         let hour = prayer.time.hour();
