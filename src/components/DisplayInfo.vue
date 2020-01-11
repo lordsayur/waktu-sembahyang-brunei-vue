@@ -1,5 +1,9 @@
 <template>
-  <div class="d-flex justify-center info-display" :class="{ active: isActive }">
+  <div
+    v-if="FilterPrayer"
+    class="d-flex justify-center info-display"
+    :class="{ active: isActive }"
+  >
     <span class="left">{{ leftText }}</span>
     <span class="divider">{{ middleText }}</span>
     <span class="right">{{ rightText }}</span>
@@ -7,9 +11,19 @@
 </template>
 
 <script>
+// import { type } from "os";
 export default {
   name: "DisplayInfo",
   props: {
+    showPrayerTime: {
+      type: Boolean
+    },
+    prayerIndex: {
+      type: Number
+    },
+    dayIndex: {
+      type: Number
+    },
     leftText: {
       type: String,
       required: true,
@@ -28,6 +42,23 @@ export default {
     isActive: {
       type: Boolean,
       default: false
+    }
+  },
+
+  computed: {
+    FilterPrayer() {
+      // Hide Imsak for next day
+      if (this.$props.dayIndex == 0) {
+        if (this.$props.prayerIndex < 4) {
+          return this.$props.showPrayerTime;
+        } else if (this.$props.prayerIndex > 7) {
+          return !this.$props.showPrayerTime;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
     }
   }
 };
