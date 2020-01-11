@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 export default {
   methods: {
     wsbPrint(title, message) {
@@ -16,6 +18,20 @@ export default {
       }
 
       console.log(title, message);
+    },
+
+    $getMomentPrayerTime(prayer) {
+      var hour = +prayer.time.substring(0, 2);
+      var minute = +prayer.time.substring(3, 5);
+
+      if (prayer.state.includes("pm") && hour < 12) {
+        hour = hour + 12;
+      }
+
+      return moment()
+        .hour(hour)
+        .minute(minute)
+        .second(0);
     }
   }
 };
