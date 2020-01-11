@@ -22,6 +22,12 @@ export default {
       return month => {
         return state.months[month].toLowerCase();
       };
+    },
+
+    getDisplayMonthName(state) {
+      return month => {
+        return state.months[month];
+      };
     }
   }
 };
