@@ -68,18 +68,6 @@ export default {
         let isCurrentTimeEqualToNextPrayerTime =
           prayerTime.time.minute() === currentTime.minute();
 
-        if (index == 0) {
-          console.log(prayer.name);
-          console.log(
-            "isCurrentTimeLessThanNextPrayerTime",
-            isCurrentTimeLessThanNextPrayerTime
-          );
-          console.log(
-            "isCurrentTimeEqualToNextPrayerTime",
-            isCurrentTimeEqualToNextPrayerTime
-          );
-        }
-
         if (isCurrentTimeLessThanNextPrayerTime) {
           currentPrayer = prayer.name;
           currentPrayerIndex = index;
@@ -99,9 +87,6 @@ export default {
             nextPrayer.index = 0;
             currentPrayer = "Isya";
             currentPrayerIndex = 7;
-            console.log("nextPrayer", nextPrayer.name, nextPrayer.index);
-            console.log("currentPrayer", currentPrayer);
-            console.log("currentPrayerIndex", currentPrayerIndex);
           }
           if (isCurrentTimeEqualToNextPrayerTime) {
             this.isIn = true;
@@ -109,7 +94,6 @@ export default {
           } else {
             this.isIn = false;
             if (index === 0) {
-            console.log("INNNNN");
               this.isIn = true;
             }
           }
