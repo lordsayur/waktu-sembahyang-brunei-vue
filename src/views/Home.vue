@@ -201,6 +201,15 @@ export default {
     }
   },
 
+
+    GetMasihiDate() {
+      let date = moment(this.TodayDate);
+      let day = date.date();
+      let month = this.$store.getters["months/getDisplayMonthName"](
+        date.month()
+      );
+      let year = date.year();
+      return `${day} ${month} ${year}`;
     }
   }
 };
