@@ -76,6 +76,9 @@ export default {
     return {
       prayerData: {},
       selectedDistrict: "brunei",
+      currentPrayerTime: {},
+      todayDate: undefined,
+      showPrayerTime: true,
       isDisplayApp: false,
       days: [
         {
@@ -127,43 +130,39 @@ export default {
         today: 0,
         tomorrow: 1,
         dayAfterTomorrow: 2
+      },
+      districtOffset: {
+        brunei: 0,
+        tutong: 1,
+        belait: 3
       }
     };
   },
 
   created() {
+    // this.TodayDate = `2020-01-05 04:56:01`;
+    this.TodayDate = undefined;
     this.registerEventBus();
-    this.days = [];
-    this.formatandPushPrayerDataToDays(this.day.today);
-    this.formatandPushPrayerDataToDays(this.day.tomorrow);
-    this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+    this.updateData();
+    this.getDisplayAppStatus();
   },
 
   methods: {
+    updateData() {
+      this.days = [];
+      this.formatandPushPrayerDataToDays(this.day.today);
+      this.formatandPushPrayerDataToDays(this.day.tomorrow);
+      this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+      // setInterval(() => {
+      //   if (this.currentPrayerTime.currentPrayerIndex > 3) {
+      //     this.showPrayerTime = false;
+      //   }
+      // }, 500);
+    },
+
     formatandPushPrayerDataToDays(offsetDay) {
-      this.days.push(this.GetPrayerData(offsetDay));
-    },
-
-    getDateData(dateOffset) {
-      var todayDate = moment().add(dateOffset, "day");
-      const day_name = this.$store.getters["days/getDisplayDayName"](
-        todayDate.day()
-      );
-      const day_number = todayDate.date() - 1;
-      const month = this.$store.getters["months/getComputerMonthName"](
-        todayDate.month()
-      );
-      return {
-        day_name,
-        day_number,
-        month
-      };
-    },
-
-    getPrayerData(date) {
-      var prayer_data = this.$store.getters["prayers/getPrayerData"](date);
-      this.wsbPrint("Prayer Data:", prayer_data);
-      return prayer_data;
+      this.days[offsetDay] = this.GetPrayerData(offsetDay);
+      this.updatePrayerDataBasedOnDistrict(offsetDay);
     },
 
     GetPrayerData(offsetDay) {
@@ -184,15 +183,61 @@ export default {
         tempPrayerObj.name = time.name;
         tempPrayerObj.time = prayer_data[time.name];
         tempPrayerObj.state = time.state;
+
+        tempPrayerObj.time = this.$getMomentPrayerTime(tempPrayerObj);
+
         tempObject.prayers.push(tempPrayerObj);
       });
+
+      if (offsetDay === this.day.tomorrow) {
+        this.days[0].prayers[8] = tempObject.prayers[0];
+        this.days[0].prayers[9] = tempObject.prayers[1];
+      }
       return tempObject;
+    },
+
+    getDateData(dateOffset) {
+      var todayDate = moment(this.TodayDate).add(dateOffset, "day");
+      const day_name = this.$store.getters["days/getDisplayDayName"](
+        todayDate.day()
+      );
+      const day_number = todayDate.date() - 1;
+      const month = this.$store.getters["months/getComputerMonthName"](
+        todayDate.month()
+      );
+      return {
+        day_name,
+        day_number,
+        month
+      };
+    },
+
+    getPrayerData(date) {
+      var prayer_data = this.$store.getters["prayers/getPrayerData"](date);
+      this.wsbPrint("Prayer Data:", prayer_data);
+      return prayer_data;
+    },
+
+    updatePrayerDataBasedOnDistrict(offsetDay) {
+      let prayerData = this.days[offsetDay].prayers;
+      prayerData.forEach(prayer => {
+        prayer.time.add(this.districtOffset[this.selectedDistrict], "m");
+      });
+    },
+
+    updatePrayerTime(prayerTime) {
+      this.currentPrayerTime = prayerTime;
     },
 
     registerEventBus() {
       eventBus.$on("districtClicked", data => {
         this.selectedDistrict = data;
+        this.updateData();
       });
+      eventBus.$on("preImsak", data => {
+        this.showPrayerTime = data;
+      });
+    },
 
     getDisplayAppStatus() {
       setTimeout(() => {
