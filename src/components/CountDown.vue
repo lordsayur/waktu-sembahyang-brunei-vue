@@ -1,25 +1,32 @@
 <template>
   <div class="count-down">
-    <p>
+    <p v-if="!nextPrayer.name">
+      Assalamualaikum
+    </p>
+    <p v-else-if="isIn">Sudah masuk waktu {{ nextPrayer.name }}</p>
+    <p v-else>
       <span :class="{ active: isActive }">{{ time }}</span> minit lagi kn masuk
-      waktu <span :class="{ active: isActive }">{{ prayer }}</span>
+      waktu <span :class="{ active: isActive }">{{ nextPrayer.name }}</span>
     </p>
   </div>
 </template>
 
 <script>
+import { eventBus } from "@/main";
+const moment = require("moment");
+
 export default {
   name: "CountDown",
+
   props: {
-    time: {
-      type: Number,
-      required: true,
-      default: 123
+    prayersData: {
+      type: Array,
+      required: true
     },
-    prayer: {
-      type: String,
-      required: true,
-      default: "Maghrib"
+    TodayDate: {
+      // eslint-disable-next-line vue/require-prop-type-constructor
+      type: String | Symbol,
+      required: true
     },
     activeStart: {
       type: Number,
@@ -27,9 +34,115 @@ export default {
     }
   },
 
+  data() {
+    return {
+      nextPrayer: {},
+      time: "10",
+      isIn: false
+    };
+  },
+
+  created() {
+    setInterval(() => {
+      this.nextPrayer = this.getStatus().nextPrayer;
+      this.updatePrayerTime();
+      this.time = this.updateCountdown();
+    }, 500);
+  },
+
+  methods: {
+    getStatus() {
+      let currentTime = moment(this.$props.TodayDate);
+      let currentPrayer = "";
+      let currentPrayerIndex = 0;
+      let nextPrayer = {};
+
+      this.$props.prayersData.forEach((prayer, index) => {
+        if (index > 7) {
+          return;
+        }
+
+        let prayerTime = prayer;
+        let isCurrentTimeLessThanNextPrayerTime =
+          moment.duration(prayerTime.time.diff(currentTime))._data.minutes < 0;
+        let isCurrentTimeEqualToNextPrayerTime =
+          prayerTime.time.minute() === currentTime.minute();
+
+        if (index == 0) {
+          console.log(prayer.name);
+          console.log(
+            "isCurrentTimeLessThanNextPrayerTime",
+            isCurrentTimeLessThanNextPrayerTime
+          );
+          console.log(
+            "isCurrentTimeEqualToNextPrayerTime",
+            isCurrentTimeEqualToNextPrayerTime
+          );
+        }
+
+        if (isCurrentTimeLessThanNextPrayerTime) {
+          currentPrayer = prayer.name;
+          currentPrayerIndex = index;
+          nextPrayer.name = this.$props.prayersData[index + 1].name;
+          nextPrayer.index = index + 1;
+          if (this.currentPrayerTime.currentPrayerIndex > 3) {
+            eventBus.$emit("preImsak", false);
+          }
+        } else {
+          if (index === 0) {
+            eventBus.$emit("preImsak", true);
+          } else if (this.nextPrayer.index !== index) {
+            return;
+          }
+          if (index === 0) {
+            nextPrayer.name = "Imsak";
+            nextPrayer.index = 0;
+            currentPrayer = "Isya";
+            currentPrayerIndex = 7;
+            console.log("nextPrayer", nextPrayer.name, nextPrayer.index);
+            console.log("currentPrayer", currentPrayer);
+            console.log("currentPrayerIndex", currentPrayerIndex);
+          }
+          if (isCurrentTimeEqualToNextPrayerTime) {
+            this.isIn = true;
+            currentPrayer = nextPrayer.name;
+          } else {
+            this.isIn = false;
+            if (index === 0) {
+            console.log("INNNNN");
+              this.isIn = true;
+            }
+          }
+        }
+      });
+
+      return {
+        currentPrayer,
+        currentPrayerIndex,
+        nextPrayer
+      };
+    },
+
+    updateCountdown() {
+      let currentTime = moment(this.$props.TodayDate);
+      let nextPrayerIndex = this.nextPrayer.index;
+      if (nextPrayerIndex === undefined) {
+        nextPrayerIndex = 0;
+      }
+      let prayerTime = this.$props.prayersData[nextPrayerIndex];
+      let time = moment.duration(prayerTime.time.diff(currentTime))._data;
+      let minutes = time.hours * 60 + time.minutes + 1;
+      return minutes;
+    },
+
+    updatePrayerTime() {
+      this.$emit("updatePrayerTime", this.getStatus());
+    }
+  },
+
   computed: {
     isActive() {
-      return this.$props.time < this.$props.activeStart;
+      return this.time < this.$props.activeStart;
     }
   }
 };
