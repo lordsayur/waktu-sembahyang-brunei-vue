@@ -1,33 +1,55 @@
 <template>
   <v-carousel height="100%" hide-delimiter-background :show-arrows="false">
-    <v-carousel-item v-for="(day, index) in days" :key="index">
+    <v-carousel-item v-for="(day, dayIndex) in days" :key="dayIndex">
       <v-sheet color="transparent" height="100%" tile>
         <v-row class="fill-height" align="center" justify="center">
           <v-col class="text-center">
-            <!-- DAY -->
-            <h1>{{ day.name }}</h1>
+            <!-- Loader -->
+            <v-progress-circular
+              v-if="!isDisplayApp"
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
 
-            <!-- DATE  -->
-            <display-info
-              class="date"
-              :left-text="day.date.masihi"
-              middle-text="|"
-              :right-text="day.date.hijrah"
-            />
+            <div v-else>
+              <!-- DAY -->
+              <h1>{{ day.name }}</h1>
 
-            <!-- TIMER -->
-            <count-down :time="10" prayer="Maghrib" />
+              <!-- DATE  -->
+              <display-info
+                class="date"
+                :left-text="GetMasihiDate"
+                middle-text="|"
+                :right-text="day.date.hijrah"
+              />
 
-            <!-- PRAYER TIME -->
-            <display-info
-              v-for="(prayer, index) in day.prayers"
-              :key="index"
-              class="prayer"
-              :left-text="prayer.name"
-              middle-text=":"
-              :right-text="`${prayer.time} ${prayer.state}`"
-              :isActive="prayer.name === 'Zuhur'"
-            />
+              <!-- TIMER -->
+              <count-down
+                v-if="
+                  dayIndex == 0 && !(currentPrayerTime.currentPrayer === 'Isya')
+                "
+                :prayers-data="getTodayPrayerTime"
+                :TodayDate="TodayDate"
+                v-on:updatePrayerTime="updatePrayerTime($event)"
+              />
+
+              <!-- PRAYER TIME -->
+              <display-info
+                v-for="(prayer, prayerIndex) in day.prayers"
+                :key="prayerIndex"
+                class="prayer"
+                :showPrayerTime="showPrayerTime"
+                :prayerIndex="prayerIndex"
+                :dayIndex="dayIndex"
+                :left-text="prayer.name"
+                middle-text=":"
+                :right-text="DisplayPrayerTime(prayer)"
+                :isActive="
+                  prayer.name === currentPrayerTime.currentPrayer &&
+                    dayIndex == 0
+                "
+              />
+            </div>
           </v-col>
         </v-row>
       </v-sheet>
@@ -54,6 +76,7 @@ export default {
     return {
       prayerData: {},
       selectedDistrict: "brunei",
+      isDisplayApp: false,
       days: [
         {
           name: "Isnin",
@@ -170,6 +193,14 @@ export default {
       eventBus.$on("districtClicked", data => {
         this.selectedDistrict = data;
       });
+
+    getDisplayAppStatus() {
+      setTimeout(() => {
+        this.isDisplayApp = true;
+      }, 1000);
+    }
+  },
+
     }
   }
 };
