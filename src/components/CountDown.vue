@@ -73,7 +73,7 @@ export default {
           currentPrayerIndex = index;
           nextPrayer.name = this.$props.prayersData[index + 1].name;
           nextPrayer.index = index + 1;
-          if (this.currentPrayerTime.currentPrayerIndex > 3) {
+          if (currentPrayerIndex > 3) {
             eventBus.$emit("preImsak", false);
           }
         } else {
