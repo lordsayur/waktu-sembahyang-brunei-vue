@@ -65,6 +65,10 @@ const moment = require("moment");
 import DisplayInfo from "@/components/DisplayInfo";
 import CountDown from "@/components/CountDown";
 
+/**
+ * @group Page
+ * This is the Main page.
+ */
 export default {
   name: "Home",
   components: {

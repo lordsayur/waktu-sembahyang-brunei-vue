@@ -59,6 +59,10 @@
 <script>
 const fb = require("@/firebaseConfig.js");
 
+/**
+ * @group Page
+ * This is the Admin page.
+ */
 export default {
   name: "Admin",
 
