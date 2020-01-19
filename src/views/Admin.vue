@@ -54,6 +54,7 @@ export default {
       originalText: "",
       result: "",
       days: [],
+      isUploaded: false
     };
   },
 
@@ -94,6 +95,16 @@ export default {
 
       console.log(this.days);
       this.result = this.days;
+    },
+
+    uploadData() {
+      // this.db
+      //   .collection("waktu")
+      //   .doc(`${this.value}`)
+      //   .set({
+      //     Day: this.days
+      //   });
+      this.isUploaded = true;
     },
 
     splitTextBy(splitBy) {
