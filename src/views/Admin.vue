@@ -18,8 +18,21 @@
       v-model="originalText"
     ></v-textarea>
 
-    <v-btn color="primary" class="mx-2" @click="convertText">Convert</v-btn>
-    <v-btn color="primary" class="mx-2" @click="uploadData">Upload</v-btn>
+    <v-btn
+      color="primary"
+      :disabled="IsConvertable"
+      class="mx-1"
+      @click="convertText"
+      >Convert</v-btn
+    >
+    <v-btn
+      color="primary"
+      :disabled="!state.isUploadable"
+      :loading="state.isProcessing"
+      class="mx-1"
+      @click="uploadData"
+      >Upload</v-btn
+    >
     <router-link to="/">
       <v-btn color="primary" class="mx-1">Home</v-btn>
     </router-link>
@@ -34,9 +47,9 @@
       </li>
     </ol>
 
-    <v-snackbar v-model="isUploaded">
+    <v-snackbar v-model="state.isUploaded">
       Upload successful
-      <v-btn color="pink" text @click="isUploaded = false">
+      <v-btn color="pink" text @click="state.isUploaded = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -44,6 +57,8 @@
 </template>
 
 <script>
+const fb = require("@/firebaseConfig.js");
+
 export default {
   name: "Admin",
 
@@ -54,7 +69,11 @@ export default {
       originalText: "",
       result: "",
       days: [],
-      isUploaded: false
+      state: {
+        isUploadable: false,
+        isUploaded: false,
+        isProcessing: false
+      }
     };
   },
 
@@ -95,22 +114,38 @@ export default {
 
       console.log(this.days);
       this.result = this.days;
+      this.state.isUploadable = true;
     },
 
     uploadData() {
-      // this.db
-      //   .collection("waktu")
-      //   .doc(`${this.value}`)
-      //   .set({
-      //     Day: this.days
-      //   });
-      this.isUploaded = true;
+      this.state.isProcessing = true;
+      fb.db
+        .collection("waktu")
+        .doc(`${this.selected_month}`)
+        .set({
+          Day: this.days
+        })
+        .then(response => {
+          console.log(response);
+          this.state.isProcessing = false;
+          this.state.isUploaded = true;
+        });
     },
 
     splitTextBy(splitBy) {
       return text => {
         return text.split(splitBy);
       };
+    }
+  },
+
+  computed: {
+    IsConvertable() {
+      if (this.originalText === "" || this.selected_month == 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
