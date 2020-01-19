@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import WSBBottomNavigation from "@/components/BottomNavigation.vue";
 
 Vue.use(VueRouter);
 
@@ -8,16 +9,19 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: Home
+    components: {
+      default: Home,
+      bottomNavigation: WSBBottomNavigation
+    }
   },
   {
-    path: "/about",
-    name: "about",
+    path: "/admin",
+    name: "admin",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "about" */ "../views/Admin.vue")
   }
 ];
 
