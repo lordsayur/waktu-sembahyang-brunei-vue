@@ -38,7 +38,7 @@ export default {
     // The starting time value that need to be highlighted
     activeStart: {
       type: Number,
-      required: true,
+      required: false,
       default: 15
     }
   },
