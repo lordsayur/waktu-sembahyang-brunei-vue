@@ -51,12 +51,57 @@ export default {
     return {
       selected_month: 0,
       months: {},
+      originalText: "",
+      result: "",
+      days: [],
     };
   },
 
   created() {
     this.months = this.$store.getters["months/getAllDisplayMonthName"];
   },
+
+  methods: {
+    convertText() {
+      let splitTextByNewLine = this.splitTextBy("\n");
+      let splitTextByTab = this.splitTextBy("\t");
+
+      let linesOfText = splitTextByNewLine(this.originalText);
+
+      linesOfText.forEach(line => {
+        let texts = splitTextByTab(line);
+        let day = {};
+
+        let properties = [
+          "Date",
+          "Tarikh",
+          "Imsak",
+          "Subuh",
+          "Syuruk",
+          "Duha",
+          "Zuhur",
+          "Asar",
+          "Maghrib",
+          "Isya"
+        ];
+
+        properties.forEach((property, index) => {
+          day[property] = texts[index].replace(":", ".");
+        });
+
+        this.days.push(day);
+      });
+
+      console.log(this.days);
+      this.result = this.days;
+    },
+
+    splitTextBy(splitBy) {
+      return text => {
+        return text.split(splitBy);
+      };
+    }
+  }
 };
 </script>
 
