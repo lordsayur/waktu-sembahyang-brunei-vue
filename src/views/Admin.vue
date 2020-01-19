@@ -46,5 +46,16 @@
 <script>
 export default {
   name: "Admin",
+
+  data() {
+    return {
+      selected_month: 0,
+      months: {},
+    };
+  },
+
+  created() {
+    this.months = this.$store.getters["months/getAllDisplayMonthName"];
+  },
 };
 </script>
