@@ -59,3 +59,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.text-white {
+  color: white;
+}
+</style>
