@@ -88,6 +88,7 @@ export default {
 
       let linesOfText = splitTextByNewLine(this.originalText);
 
+      this.days = [];
       linesOfText.forEach(line => {
         let texts = splitTextByTab(line);
         let day = {};
@@ -112,7 +113,6 @@ export default {
         this.days.push(day);
       });
 
-      console.log(this.days);
       this.result = this.days;
       this.state.isUploadable = true;
     },
