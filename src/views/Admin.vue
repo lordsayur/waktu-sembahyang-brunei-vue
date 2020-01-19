@@ -119,8 +119,7 @@ export default {
 
     uploadData() {
       this.state.isProcessing = true;
-      fb.db
-        .collection("waktu")
+      fb.waktuCollection
         .doc(`${this.selected_month}`)
         .set({
           Day: this.days
