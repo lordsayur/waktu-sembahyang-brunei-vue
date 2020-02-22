@@ -18,7 +18,7 @@
               <!-- DATE  -->
               <display-info
                 class="date"
-                :left-text="GetMasihiDate"
+                :left-text="GetMasihiDate(dayIndex)"
                 middle-text="|"
                 :right-text="day.date.hijrah"
               />
@@ -281,13 +281,16 @@ export default {
     },
 
     GetMasihiDate() {
-      let date = moment(this.TodayDate);
-      let day = date.date();
-      let month = this.$store.getters["months/getDisplayMonthName"](
-        date.month()
-      );
-      let year = date.year();
-      return `${day} ${month} ${year}`;
+      return offset => {
+        let date = moment(this.TodayDate);
+        date = date.add(offset, "days");
+        let day = date.date();
+        let month = this.$store.getters["months/getDisplayMonthName"](
+          date.month()
+        );
+        let year = date.year();
+        return `${day} ${month} ${year}`;
+      };
     }
   }
 };
