@@ -154,9 +154,13 @@ export default {
   methods: {
     updateData() {
       this.days = [];
-      this.formatandPushPrayerDataToDays(this.day.today);
-      this.formatandPushPrayerDataToDays(this.day.tomorrow);
-      this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+      try {
+        this.formatandPushPrayerDataToDays(this.day.today);
+        this.formatandPushPrayerDataToDays(this.day.tomorrow);
+        this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+      } catch (error) {
+        console.error(error);
+      }
       // setInterval(() => {
       //   if (this.currentPrayerTime.currentPrayerIndex > 3) {
       //     this.showPrayerTime = false;
