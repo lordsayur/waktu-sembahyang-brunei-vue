@@ -21,6 +21,10 @@ export default {
     },
 
     $getMomentPrayerTime(prayer) {
+      // Add leading 0 for hour if not available
+      if (prayer.time.length < 5) {
+        prayer.time = `0${prayer.time}`;
+      }
       var hour = +prayer.time.substring(0, 2);
       var minute = +prayer.time.substring(3, 5);
 
