@@ -113,7 +113,9 @@ export default {
     };
   },
 
-  created() {
+  async created() {
+    await this.$store.dispatch("prayers/getPrayerData");
+
     // eslint-disable-next-line no-constant-condition
     if (false) {
       this.TodayDate = `2020-03-03 06:14:01`;
