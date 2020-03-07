@@ -81,7 +81,7 @@ export default {
       prayerData: {},
       selectedDistrict: "brunei",
       currentPrayerTime: {},
-      todayDate: undefined,
+      TodayDate: undefined,
       showPrayerTime: true,
       isDisplayApp: false,
       days: [
@@ -114,8 +114,11 @@ export default {
   },
 
   created() {
-    // this.TodayDate = `2020-01-05 04:56:01`;
-    this.TodayDate = undefined;
+    // eslint-disable-next-line no-constant-condition
+    if (false) {
+      this.TodayDate = `2020-03-03 06:14:01`;
+    }
+
     this.registerEventBus();
     this.updateData();
     this.getDisplayAppStatus();
