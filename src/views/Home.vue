@@ -96,36 +96,6 @@ export default {
               name: "Imsak",
               time: "05:00",
               state: "am"
-            },
-            {
-              name: "Subuh",
-              time: "05:00",
-              state: "am"
-            },
-            {
-              name: "Dhuha",
-              time: "05:00",
-              state: "am"
-            },
-            {
-              name: "Zuhur",
-              time: "05:00",
-              state: "pm"
-            },
-            {
-              name: "Asar",
-              time: "05:00",
-              state: "pm"
-            },
-            {
-              name: "Maghrib",
-              time: "05:00",
-              state: "pm"
-            },
-            {
-              name: "Isya",
-              time: "05:00",
-              state: "pm"
             }
           ]
         }
