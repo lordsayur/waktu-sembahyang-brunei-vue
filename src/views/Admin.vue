@@ -122,18 +122,29 @@ export default {
       this.state.isUploadable = true;
     },
 
-    uploadData() {
-      this.state.isProcessing = true;
-      fb.waktuCollection
-        .doc(`${this.selected_month}`)
-        .set({
+    async uploadData() {
+      try {
+        this.state.isProcessing = true;
+
+        // upload prayer data to firebase
+        await fb.waktuCollection.doc(`${this.selected_month}`).set({
           Day: this.days
-        })
-        .then(response => {
-          console.log(response);
-          this.state.isProcessing = false;
-          this.state.isUploaded = true;
         });
+
+        // get current metadata version, increment it, and update firebase meta data version
+        let localMetadata = this.$store.getters["prayers/getMetaData"];
+        localMetadata = JSON.parse(localMetadata);
+
+        await fb.DatabaseMetaData.doc("data").set({
+          data: { version: localMetadata.version + 1 }
+        });
+        console.log("New metadata version", localMetadata.version + 1);
+
+        this.state.isProcessing = false;
+        this.state.isUploaded = true;
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     splitTextBy(splitBy) {
