@@ -13,8 +13,8 @@
     "serve:vuese": "vuese serve --open"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/LordSayur/waktu-sembahyang-brunei-vue.git"
+    "type": "git",
+    "url": "https://github.com/LordSayur/waktu-sembahyang-brunei-vue.git"
   },
   "dependencies": {
     "core-js": "^3.4.3",
