@@ -75,6 +75,11 @@ export default {
     },
     getPrayersTime(state) {
       return state.prayer_name;
+    },
+    getMetaData(state) {
+      return state.metadata;
+    }
+  },
     }
   }
 };
