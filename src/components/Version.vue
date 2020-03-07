@@ -1,5 +1,5 @@
 <template>
-  <p id="version">lord sayur v3.0.0-alpha10</p>
+  <p id="version">lord sayur v3.0.0-alpha11</p>
 </template>
 
 <script>
