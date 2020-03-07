@@ -26,10 +26,12 @@ db.settings(settings);
 
 // firebase collections
 const waktuCollection = db.collection("waktu");
+const DatabaseMetaData = db.collection("metadata");
 
 export {
   db,
   // auth,
   // currentUser,
-  waktuCollection
+  waktuCollection,
+  DatabaseMetaData
 };
