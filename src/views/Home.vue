@@ -202,8 +202,7 @@ export default {
     },
 
     updatePrayerDataBasedOnDistrict(offsetDay) {
-      let prayerData = this.days[offsetDay].prayers;
-      prayerData.forEach(prayer => {
+      this.days[offsetDay].prayers.forEach(prayer => {
         prayer.time.add(this.districtOffset[this.selectedDistrict], "m");
       });
     },
@@ -213,9 +212,10 @@ export default {
     },
 
     registerEventBus() {
+      // Update prayer data if selected district is changed
       eventBus.$on("districtClicked", data => {
         this.selectedDistrict = data;
-        this.updateData();
+        this.updatePrayerDataBasedOnDistrict(this.day.today);
       });
       eventBus.$on("preImsak", data => {
         this.showPrayerTime = data;
