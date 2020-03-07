@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <wsb-version></wsb-version>
+
     <v-content>
       <router-view></router-view>
     </v-content>
@@ -9,8 +11,14 @@
 </template>
 
 <script>
+import WsbVersion from "@/components/Version";
+
 export default {
   name: "App",
+
+  components: {
+    "wsb-version": WsbVersion
+  },
 
   data: () => ({
     //
