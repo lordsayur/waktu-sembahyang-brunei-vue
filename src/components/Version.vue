@@ -1,10 +1,18 @@
 <template>
-  <p id="version">lord sayur v3.0.0-alpha11</p>
+  <p id="version">lordsayur{{ Version }}</p>
 </template>
 
 <script>
+let pjson = require("../../package.json");
+
 export default {
-  name: "Version"
+  name: "Version",
+
+  computed: {
+    Version() {
+      return pjson.version;
+    }
+  }
 };
 </script>
 
