@@ -83,6 +83,7 @@ export default {
 
   created() {
     this.months = this.$store.getters["months/getAllDisplayMonthName"];
+    this.$store.dispatch("prayers/getPrayerData");
   },
 
   methods: {
