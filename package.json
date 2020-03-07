@@ -3,7 +3,7 @@
   "version": "3.0.0-alpha.11",
   "private": true,
   "scripts": {
-    "version": "npm version prerelease --preid=alpha --no-git-tag-version",
+    "version:alpha-update": "npm version prerelease --preid=alpha",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
