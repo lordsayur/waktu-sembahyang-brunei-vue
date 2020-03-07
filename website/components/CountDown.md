@@ -9,7 +9,7 @@ This component display the count down to next prayer time.
 |---|---|---|---|---|
 |prayersData|Contains all data related about prayer time.|`Array`|`true`|-|
 |TodayDate|Contain today's date. All today's date is shared from one source for easy debugging.|eslint-disable-next-line vue/require-prop-type-constructor|`true`|-|
-|activeStart|The starting time value that need to be highlighted|`Number`|`true`|15|
+|activeStart|The starting time value that need to be highlighted|`Number`|`false`|15|
 
 <!-- @vuese:CountDown:props:end -->
 
