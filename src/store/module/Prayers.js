@@ -48,7 +48,17 @@ export default {
         name: "Isya",
         state: "pm"
       }
-    ]
+    ],
+    metadata: {}
+  },
+
+  mutations: {
+    updatePrayer(state, n) {
+      state.prayer_data[n[0]] = n[1];
+    },
+    updateMetaData(state, data) {
+      state.metadata = data;
+    }
   },
 
   getters: {
