@@ -215,7 +215,7 @@ export default {
       // Update prayer data if selected district is changed
       eventBus.$on("districtClicked", data => {
         this.selectedDistrict = data;
-        this.updatePrayerDataBasedOnDistrict(this.day.today);
+        this.updateData();
       });
       eventBus.$on("preImsak", data => {
         this.showPrayerTime = data;
