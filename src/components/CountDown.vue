@@ -15,21 +15,30 @@
 import { eventBus } from "@/main";
 const moment = require("moment");
 
+/**
+ * @group Component
+ * This component display the count down to next prayer time.
+ */
 export default {
   name: "CountDown",
 
   props: {
+    // Contains all data related about prayer time.
     prayersData: {
       type: Array,
       required: true
     },
+
+    // Contain today's date. All today's date is shared from one source for easy debugging.
     TodayDate: {
       // eslint-disable-next-line vue/require-prop-type-constructor
       type: String | Symbol,
       required: true
     },
+    // The starting time value that need to be highlighted
     activeStart: {
       type: Number,
+      required: false,
       default: 15
     }
   },
@@ -68,28 +77,18 @@ export default {
         let isCurrentTimeEqualToNextPrayerTime =
           prayerTime.time.minute() === currentTime.minute();
 
-        if (index == 0) {
-          console.log(prayer.name);
-          console.log(
-            "isCurrentTimeLessThanNextPrayerTime",
-            isCurrentTimeLessThanNextPrayerTime
-          );
-          console.log(
-            "isCurrentTimeEqualToNextPrayerTime",
-            isCurrentTimeEqualToNextPrayerTime
-          );
-        }
-
         if (isCurrentTimeLessThanNextPrayerTime) {
           currentPrayer = prayer.name;
           currentPrayerIndex = index;
           nextPrayer.name = this.$props.prayersData[index + 1].name;
           nextPrayer.index = index + 1;
-          if (this.currentPrayerTime.currentPrayerIndex > 3) {
+          if (currentPrayerIndex > 3) {
             eventBus.$emit("preImsak", false);
           }
         } else {
           if (index === 0) {
+            // Set preImsak to be true
+            // @arg The argument is a boolean value representing the state of pre Imsak
             eventBus.$emit("preImsak", true);
           } else if (this.nextPrayer.index !== index) {
             return;
@@ -99,9 +98,6 @@ export default {
             nextPrayer.index = 0;
             currentPrayer = "Isya";
             currentPrayerIndex = 7;
-            console.log("nextPrayer", nextPrayer.name, nextPrayer.index);
-            console.log("currentPrayer", currentPrayer);
-            console.log("currentPrayerIndex", currentPrayerIndex);
           }
           if (isCurrentTimeEqualToNextPrayerTime) {
             this.isIn = true;
@@ -109,7 +105,6 @@ export default {
           } else {
             this.isIn = false;
             if (index === 0) {
-            console.log("INNNNN");
               this.isIn = true;
             }
           }
@@ -136,6 +131,8 @@ export default {
     },
 
     updatePrayerTime() {
+      // Update prayer time.
+      // @arg The argument is an object value contain status of current time.
       this.$emit("updatePrayerTime", this.getStatus());
     }
   },

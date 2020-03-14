@@ -11,34 +11,44 @@
 </template>
 
 <script>
-// import { type } from "os";
+/**
+ * @group Component
+ * This component display information about the prayer time.
+ */
 export default {
   name: "DisplayInfo",
   props: {
+    // Show or hide the specific info
     showPrayerTime: {
       type: Boolean
     },
+    // Index of the info in the data's array
     prayerIndex: {
       type: Number
     },
+    // Index of the day in the data's array
     dayIndex: {
       type: Number
     },
+    // Text on the left side
     leftText: {
       type: String,
       required: true,
       default: "left"
     },
+    // Text on the right side
     rightText: {
       type: String,
       required: true,
       default: "right"
     },
+    // Text on the middle
     middleText: {
       type: String,
       required: true,
       default: ","
     },
+    // If the specific info need to be highlighted
     isActive: {
       type: Boolean,
       default: false

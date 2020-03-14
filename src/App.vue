@@ -1,20 +1,23 @@
 <template>
   <v-app>
+    <wsb-version></wsb-version>
+
     <v-content>
       <router-view></router-view>
     </v-content>
 
-    <wsb-bottom-navigation></wsb-bottom-navigation>
+    <router-view name="bottomNavigation"></router-view>
   </v-app>
 </template>
 
 <script>
-import WSBBottomNavigation from "@/components/BottomNavigation.vue";
+import WsbVersion from "@/components/Version";
 
 export default {
   name: "App",
+
   components: {
-    "wsb-bottom-navigation": WSBBottomNavigation
+    "wsb-version": WsbVersion
   },
 
   data: () => ({

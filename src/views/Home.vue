@@ -18,7 +18,7 @@
               <!-- DATE  -->
               <display-info
                 class="date"
-                :left-text="GetMasihiDate"
+                :left-text="GetMasihiDate(dayIndex)"
                 middle-text="|"
                 :right-text="day.date.hijrah"
               />
@@ -65,6 +65,10 @@ const moment = require("moment");
 import DisplayInfo from "@/components/DisplayInfo";
 import CountDown from "@/components/CountDown";
 
+/**
+ * @group Page
+ * This is the Main page.
+ */
 export default {
   name: "Home",
   components: {
@@ -77,7 +81,7 @@ export default {
       prayerData: {},
       selectedDistrict: "brunei",
       currentPrayerTime: {},
-      todayDate: undefined,
+      TodayDate: undefined,
       showPrayerTime: true,
       isDisplayApp: false,
       days: [
@@ -92,36 +96,6 @@ export default {
               name: "Imsak",
               time: "05:00",
               state: "am"
-            },
-            {
-              name: "Subuh",
-              time: "05:00",
-              state: "am"
-            },
-            {
-              name: "Dhuha",
-              time: "05:00",
-              state: "am"
-            },
-            {
-              name: "Zuhur",
-              time: "05:00",
-              state: "pm"
-            },
-            {
-              name: "Asar",
-              time: "05:00",
-              state: "pm"
-            },
-            {
-              name: "Maghrib",
-              time: "05:00",
-              state: "pm"
-            },
-            {
-              name: "Isya",
-              time: "05:00",
-              state: "pm"
             }
           ]
         }
@@ -139,9 +113,14 @@ export default {
     };
   },
 
-  created() {
-    // this.TodayDate = `2020-01-05 04:56:01`;
-    this.TodayDate = undefined;
+  async created() {
+    await this.$store.dispatch("prayers/getPrayerData");
+
+    // eslint-disable-next-line no-constant-condition
+    if (false) {
+      this.TodayDate = `2020-03-03 06:14:01`;
+    }
+
     this.registerEventBus();
     this.updateData();
     this.getDisplayAppStatus();
@@ -150,9 +129,13 @@ export default {
   methods: {
     updateData() {
       this.days = [];
-      this.formatandPushPrayerDataToDays(this.day.today);
-      this.formatandPushPrayerDataToDays(this.day.tomorrow);
-      this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+      try {
+        this.formatandPushPrayerDataToDays(this.day.today);
+        this.formatandPushPrayerDataToDays(this.day.tomorrow);
+        this.formatandPushPrayerDataToDays(this.day.dayAfterTomorrow);
+      } catch (error) {
+        console.error(error);
+      }
       // setInterval(() => {
       //   if (this.currentPrayerTime.currentPrayerIndex > 3) {
       //     this.showPrayerTime = false;
@@ -219,8 +202,7 @@ export default {
     },
 
     updatePrayerDataBasedOnDistrict(offsetDay) {
-      let prayerData = this.days[offsetDay].prayers;
-      prayerData.forEach(prayer => {
+      this.days[offsetDay].prayers.forEach(prayer => {
         prayer.time.add(this.districtOffset[this.selectedDistrict], "m");
       });
     },
@@ -230,6 +212,7 @@ export default {
     },
 
     registerEventBus() {
+      // Update prayer data if selected district is changed
       eventBus.$on("districtClicked", data => {
         this.selectedDistrict = data;
         this.updateData();
@@ -273,13 +256,16 @@ export default {
     },
 
     GetMasihiDate() {
-      let date = moment(this.TodayDate);
-      let day = date.date();
-      let month = this.$store.getters["months/getDisplayMonthName"](
-        date.month()
-      );
-      let year = date.year();
-      return `${day} ${month} ${year}`;
+      return offset => {
+        let date = moment(this.TodayDate);
+        date = date.add(offset, "days");
+        let day = date.date();
+        let month = this.$store.getters["months/getDisplayMonthName"](
+          date.month()
+        );
+        let year = date.year();
+        return `${day} ${month} ${year}`;
+      };
     }
   }
 };

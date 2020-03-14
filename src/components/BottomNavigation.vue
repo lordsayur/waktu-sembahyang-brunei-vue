@@ -23,8 +23,13 @@
 <script>
 import { eventBus } from "@/main";
 
+/**
+ * @group App
+ * This is the application bottom navigation.
+ */
 export default {
   name: "BottomNavigation",
+
   data() {
     return {
       selectedDistrict: "brunei",
@@ -47,7 +52,12 @@ export default {
 
   methods: {
     updateSelectedDistrict(selectedDistrict) {
+      // Stop this function if recently clicked district if the same as
+      // currently selected district
       if (this.selectedDistrict === selectedDistrict) return;
+
+      // Fire when the selected district is changed.
+      // @arg The argument is a string value representing the text of the selected district
       eventBus.$emit("districtClicked", selectedDistrict);
     }
   }

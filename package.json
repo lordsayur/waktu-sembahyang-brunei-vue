@@ -1,16 +1,24 @@
 {
   "name": "waktu-sembahyang-brunei-vue",
-  "version": "0.1.0",
+  "version": "3.0.0-alpha.14",
   "private": true,
   "scripts": {
+    "version:alpha-update": "npm version prerelease --preid=alpha",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "generate:vuese": "vuese gen",
+    "serve:vuese": "vuese serve --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LordSayur/waktu-sembahyang-brunei-vue.git"
   },
   "dependencies": {
     "core-js": "^3.4.3",
+    "firebase": "^7.7.0",
     "moment": "^2.24.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
@@ -34,7 +42,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^5.0.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
