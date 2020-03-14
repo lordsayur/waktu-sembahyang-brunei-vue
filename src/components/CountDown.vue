@@ -1,9 +1,13 @@
 <template>
   <div class="count-down">
-    <p v-if="!nextPrayer.name">
+    <p
+      v-if="
+        !nextPrayer.name ||
+          (getStatus().currentPrayer.includes('Isya') && !isPreImsak)
+      "
+    >
       Assalamualaikum
     </p>
-    <p v-else-if="isIn">Sudah masuk waktu {{ nextPrayer.name }}</p>
     <p v-else>
       <span :class="{ active: isActive }">{{ time }}</span> minit lagi kn masuk
       waktu <span :class="{ active: isActive }">{{ nextPrayer.name }}</span>
@@ -47,6 +51,7 @@ export default {
     return {
       nextPrayer: {},
       time: "10",
+      isPreImsak: false,
       isIn: false
     };
   },
@@ -62,60 +67,63 @@ export default {
   methods: {
     getStatus() {
       let currentTime = moment(this.$props.TodayDate);
-      let currentPrayer = "";
-      let currentPrayerIndex = 0;
-      let nextPrayer = {};
+      let prayersData = this.$props.prayersData;
 
-      this.$props.prayersData.forEach((prayer, index) => {
+      for (let index = 0; index < prayersData.length; index++) {
         if (index > 7) {
           return;
         }
 
-        let prayerTime = prayer;
-        let isCurrentTimeLessThanNextPrayerTime =
-          moment.duration(prayerTime.time.diff(currentTime))._data.minutes < 0;
-        let isCurrentTimeEqualToNextPrayerTime =
-          prayerTime.time.minute() === currentTime.minute();
+        let prayer = prayersData[index];
+        let nextPrayer = prayersData[index + 1];
 
-        if (isCurrentTimeLessThanNextPrayerTime) {
-          currentPrayer = prayer.name;
-          currentPrayerIndex = index;
-          nextPrayer.name = this.$props.prayersData[index + 1].name;
-          nextPrayer.index = index + 1;
-          if (currentPrayerIndex > 3) {
-            eventBus.$emit("preImsak", false);
-          }
-        } else {
-          if (index === 0) {
-            // Set preImsak to be true
-            // @arg The argument is a boolean value representing the state of pre Imsak
-            eventBus.$emit("preImsak", true);
-          } else if (this.nextPrayer.index !== index) {
-            return;
-          }
-          if (index === 0) {
-            nextPrayer.name = "Imsak";
-            nextPrayer.index = 0;
-            currentPrayer = "Isya";
-            currentPrayerIndex = 7;
-          }
-          if (isCurrentTimeEqualToNextPrayerTime) {
-            this.isIn = true;
-            currentPrayer = nextPrayer.name;
-          } else {
-            this.isIn = false;
-            if (index === 0) {
-              this.isIn = true;
+        // Hanlde Isya
+        if (index === 7) {
+          return {
+            currentPrayer: "Isya",
+            currentPrayerIndex: 7,
+            nextPrayer: {
+              name: "Imsak",
+              index: 0
             }
-          }
+          };
         }
-      });
 
-      return {
-        currentPrayer,
-        currentPrayerIndex,
-        nextPrayer
-      };
+        // Handle pre imsak
+        let isCurrentTimeIsPreImsak = currentTime.isBefore(prayersData[0].time);
+        if (isCurrentTimeIsPreImsak) {
+          this.isPreImsak = true;
+          eventBus.$emit("preImsak", true);
+          return {
+            currentPrayer: "Isya",
+            currentPrayerIndex: 7,
+            nextPrayer: {
+              name: "Imsak",
+              index: 0
+            }
+          };
+        }
+        this.isPreImsak = false;
+        eventBus.$emit("preImsak", false);
+
+        // Handle other prayers
+        let isCurrentTimeIsDuringThisPrayerTime = currentTime.isBetween(
+          prayer.time,
+          nextPrayer.time,
+          null,
+          "[)"
+        );
+        if (isCurrentTimeIsDuringThisPrayerTime) {
+          return {
+            currentPrayer: prayer.name,
+            currentPrayerIndex: index,
+            nextPrayer: {
+              name: nextPrayer.name,
+              index: index + 1
+            }
+          };
+        }
+      }
     },
 
     updateCountdown() {

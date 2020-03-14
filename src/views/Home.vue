@@ -25,9 +25,6 @@
 
               <!-- TIMER -->
               <count-down
-                v-if="
-                  dayIndex == 0 && !(currentPrayerTime.currentPrayer === 'Isya')
-                "
                 :prayers-data="getTodayPrayerTime"
                 :TodayDate="TodayDate"
                 v-on:updatePrayerTime="updatePrayerTime($event)"
@@ -225,7 +222,7 @@ export default {
     getDisplayAppStatus() {
       setTimeout(() => {
         this.isDisplayApp = true;
-      }, 1000);
+      }, 500);
     }
   },
 
