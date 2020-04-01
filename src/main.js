@@ -4,6 +4,7 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+const { auth } = require("./firebaseConfig.js");
 
 import globalMixin from "@/mixins/global";
 
@@ -13,9 +14,15 @@ Vue.config.productionTip = false;
 
 Vue.mixin(globalMixin);
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount("#app");
+let app;
+
+auth.onAuthStateChanged(() => {
+  if (!app) {
+    app = new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App)
+    }).$mount("#app");
+  }
+});

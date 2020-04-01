@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/auth";
 
 // firebase init goes here
 const config = {
@@ -15,8 +16,7 @@ firebase.initializeApp(config);
 
 // firebase utils
 const db = firebase.firestore();
-// const auth = firebase.auth();
-// const currentUser = auth.currentUser;
+const auth = firebase.auth();
 
 // date issue fix according to firebase
 const settings = {
@@ -28,10 +28,4 @@ db.settings(settings);
 const waktuCollection = db.collection("waktu");
 const DatabaseMetaData = db.collection("metadata");
 
-export {
-  db,
-  // auth,
-  // currentUser,
-  waktuCollection,
-  DatabaseMetaData
-};
+export { db, auth, waktuCollection, DatabaseMetaData };
