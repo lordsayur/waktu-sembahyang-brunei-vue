@@ -1,6 +1,6 @@
 {
   "name": "waktu-sembahyang-brunei-vue",
-  "version": "3.0.0-alpha.15",
+  "version": "3.0.0-alpha.16",
   "private": true,
   "scripts": {
     "version:alpha-update": "npm version prerelease --preid=alpha",
