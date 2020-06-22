@@ -1,11 +1,11 @@
 import { shallowMount } from "@vue/test-utils";
 import global from "@/mixins/global.js";
 
-describe("wsbPrint", () => {
+describe.skip("wsbPrint", () => {
   jest.spyOn(console, "log");
   const Component = {
     render() {},
-    mixins: [global]
+    mixins: [global],
   };
   const wrapper = shallowMount(Component);
 

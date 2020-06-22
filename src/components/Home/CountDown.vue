@@ -31,19 +31,6 @@ export default {
     prayersData: {
       type: Array,
       required: true
-    },
-
-    // Contain today's date. All today's date is shared from one source for easy debugging.
-    TodayDate: {
-      // eslint-disable-next-line vue/require-prop-type-constructor
-      type: String | Symbol,
-      required: true
-    },
-    // The starting time value that need to be highlighted
-    activeStart: {
-      type: Number,
-      required: false,
-      default: 15
     }
   },
 
@@ -52,21 +39,26 @@ export default {
       nextPrayer: {},
       time: "10",
       isPreImsak: false,
-      isIn: false
+      TodayDateTime: undefined
     };
   },
 
   created() {
+    this.TodayDateTime = this.$store.getters["general/getTodayDateTime"];
+    this.nextPrayer = this.getStatus().nextPrayer;
+    this.updatePrayerTime();
     setInterval(() => {
-      this.nextPrayer = this.getStatus().nextPrayer;
-      this.updatePrayerTime();
       this.time = this.updateCountdown();
     }, 500);
   },
 
+  mounted() {
+    this.wsbPrint("prayersData", this.$props.prayersData);
+  },
+
   methods: {
     getStatus() {
-      let currentTime = moment(this.$props.TodayDate);
+      let currentTime = moment(this.TodayDateTime);
       let prayersData = this.$props.prayersData;
 
       for (let index = 0; index < prayersData.length; index++) {
@@ -76,6 +68,9 @@ export default {
 
         let prayer = prayersData[index];
         let nextPrayer = prayersData[index + 1];
+
+        this.isPreImsak = false;
+        eventBus.$emit("preImsak", false);
 
         // Hanlde Isya
         if (index === 7) {
@@ -96,15 +91,12 @@ export default {
           eventBus.$emit("preImsak", true);
           return {
             currentPrayer: "Isya",
-            currentPrayerIndex: 7,
             nextPrayer: {
               name: "Imsak",
               index: 0
             }
           };
         }
-        this.isPreImsak = false;
-        eventBus.$emit("preImsak", false);
 
         // Handle other prayers
         let isCurrentTimeIsDuringThisPrayerTime = currentTime.isBetween(
@@ -127,7 +119,7 @@ export default {
     },
 
     updateCountdown() {
-      let currentTime = moment(this.$props.TodayDate);
+      let currentTime = moment(this.TodayDateTime);
       let nextPrayerIndex = this.nextPrayer.index;
       if (nextPrayerIndex === undefined) {
         nextPrayerIndex = 0;
@@ -147,7 +139,7 @@ export default {
 
   computed: {
     isActive() {
-      return this.time < this.$props.activeStart;
+      return this.time <= this.$store.state.configuration.activeStart;
     }
   }
 };
