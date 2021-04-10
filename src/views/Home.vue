@@ -26,7 +26,7 @@
               <!-- TIMER -->
               <count-down
                 v-if="
-                  dayIndex == 0 && !(currentPrayerTime.currentPrayer === 'Isya')
+                  dayIndex == 0 && !(isIsya)
                 "
                 :prayers-data="getTodayPrayerTime"
                 :TodayDate="TodayDate"
@@ -117,8 +117,8 @@ export default {
     await this.$store.dispatch("prayers/getPrayerData");
 
     // eslint-disable-next-line no-constant-condition
-    if (false) {
-      this.TodayDate = `2020-03-03 06:14:01`;
+    if (true) {
+      this.TodayDate = `2021-04-11 02:40:01`;
     }
 
     this.registerEventBus();
@@ -266,6 +266,10 @@ export default {
         let year = date.year();
         return `${day} ${month} ${year}`;
       };
+    },
+
+    isIsya() {
+      return this.currentPrayerTime.currentPrayer === "Isya"
     }
   }
 };

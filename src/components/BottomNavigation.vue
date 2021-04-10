@@ -17,6 +17,9 @@
     >
       <span v-html="district.name"></span>
     </v-btn>
+    <v-btn text icon @click="refresh">
+        <v-icon>refresh</v-icon>
+      </v-btn>
   </v-bottom-navigation>
 </template>
 
@@ -59,6 +62,9 @@ export default {
       // Fire when the selected district is changed.
       // @arg The argument is a string value representing the text of the selected district
       eventBus.$emit("districtClicked", selectedDistrict);
+    },
+    refresh() {
+      this.$forceUpdate()
     }
   }
 };
