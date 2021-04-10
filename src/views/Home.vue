@@ -117,7 +117,7 @@ export default {
     await this.$store.dispatch("prayers/getPrayerData");
 
     // eslint-disable-next-line no-constant-condition
-    if (true) {
+    if (false) {
       this.TodayDate = `2021-04-11 02:40:01`;
     }
 
