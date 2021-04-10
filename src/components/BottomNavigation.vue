@@ -64,7 +64,7 @@ export default {
       eventBus.$emit("districtClicked", selectedDistrict);
     },
     refresh() {
-      this.$forceUpdate()
+      location.reload()
     }
   }
 };
