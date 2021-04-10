@@ -75,7 +75,7 @@ export default {
         let isCurrentTimeLessThanNextPrayerTime =
           moment.duration(prayerTime.time.diff(currentTime))._data.minutes < 0;
         let isCurrentTimeEqualToNextPrayerTime =
-          prayerTime.time.minute() === currentTime.minute();
+          prayerTime.time.minute() === currentTime.minute() && prayerTime.time.hour() === currentTime.hour();
 
         if (isCurrentTimeLessThanNextPrayerTime) {
           currentPrayer = prayer.name;
