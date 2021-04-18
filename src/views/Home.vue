@@ -36,7 +36,7 @@
                 v-for="(prayer, prayerIndex) in day.prayers"
                 :key="prayerIndex"
                 class="prayer"
-                :showPrayerTime="showPrayerTime"
+                :isBeforeZuhur="showPrayerTime"
                 :prayerIndex="prayerIndex"
                 :dayIndex="dayIndex"
                 :left-text="prayer.name"
@@ -46,6 +46,7 @@
                   prayer.name === currentPrayerTime.currentPrayer &&
                     dayIndex == 0
                 "
+                :prayerTime="currentPrayerTime"
               />
             </div>
           </v-col>
@@ -134,11 +135,6 @@ export default {
       } catch (error) {
         console.error(error);
       }
-      // setInterval(() => {
-      //   if (this.currentPrayerTime.currentPrayerIndex > 3) {
-      //     this.showPrayerTime = false;
-      //   }
-      // }, 500);
     },
 
     formatandPushPrayerDataToDays(offsetDay) {
