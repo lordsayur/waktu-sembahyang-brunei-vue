@@ -20,39 +20,39 @@ export default {
   props: {
     // Show or hide the specific info
     showPrayerTime: {
-      type: Boolean
+      type: Boolean,
     },
     // Index of the info in the data's array
     prayerIndex: {
-      type: Number
+      type: Number,
     },
     // Index of the day in the data's array
     dayIndex: {
-      type: Number
+      type: Number,
     },
     // Text on the left side
     leftText: {
       type: String,
       required: true,
-      default: "left"
+      default: "left",
     },
     // Text on the right side
     rightText: {
       type: String,
       required: true,
-      default: "right"
+      default: "right",
     },
     // Text on the middle
     middleText: {
       type: String,
       required: true,
-      default: ","
+      default: ",",
     },
     // If the specific info need to be highlighted
     isActive: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   computed: {
@@ -69,8 +69,8 @@ export default {
       } else {
         return true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

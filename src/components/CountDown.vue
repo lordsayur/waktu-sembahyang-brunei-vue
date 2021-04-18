@@ -1,8 +1,6 @@
 <template>
   <div class="count-down">
-    <p v-if="!nextPrayer.name">
-      Assalamualaikum
-    </p>
+    <p v-if="!nextPrayer.name">Assalamualaikum</p>
     <p v-else-if="isIn">Sudah masuk waktu {{ nextPrayer.name }}</p>
     <p v-else>
       <span :class="{ active: isActive }">{{ time }}</span> minit lagi kn masuk
@@ -26,28 +24,28 @@ export default {
     // Contains all data related about prayer time.
     prayersData: {
       type: Array,
-      required: true
+      required: true,
     },
 
     // Contain today's date. All today's date is shared from one source for easy debugging.
     TodayDate: {
       // eslint-disable-next-line vue/require-prop-type-constructor
       type: String | Symbol,
-      required: true
+      required: true,
     },
     // The starting time value that need to be highlighted
     activeStart: {
       type: Number,
       required: false,
-      default: 15
-    }
+      default: 15,
+    },
   },
 
   data() {
     return {
       nextPrayer: {},
       time: "10",
-      isIn: false
+      isIn: false,
     };
   },
 
@@ -75,7 +73,8 @@ export default {
         let isCurrentTimeLessThanNextPrayerTime =
           moment.duration(prayerTime.time.diff(currentTime))._data.minutes < 0;
         let isCurrentTimeEqualToNextPrayerTime =
-          prayerTime.time.minute() === currentTime.minute() && prayerTime.time.hour() === currentTime.hour();
+          prayerTime.time.minute() === currentTime.minute() &&
+          prayerTime.time.hour() === currentTime.hour();
 
         if (isCurrentTimeLessThanNextPrayerTime) {
           currentPrayer = prayer.name;
@@ -114,7 +113,7 @@ export default {
       return {
         currentPrayer,
         currentPrayerIndex,
-        nextPrayer
+        nextPrayer,
       };
     },
 
@@ -134,14 +133,14 @@ export default {
       // Update prayer time.
       // @arg The argument is an object value contain status of current time.
       this.$emit("updatePrayerTime", this.getStatus());
-    }
+    },
   },
 
   computed: {
     isActive() {
       return this.time < this.$props.activeStart;
-    }
-  }
+    },
+  },
 };
 </script>
 

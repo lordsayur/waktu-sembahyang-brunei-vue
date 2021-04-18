@@ -18,8 +18,8 @@
       <span v-html="district.name"></span>
     </v-btn>
     <v-btn text icon @click="refresh">
-        <v-icon>refresh</v-icon>
-      </v-btn>
+      <v-icon>refresh</v-icon>
+    </v-btn>
   </v-bottom-navigation>
 </template>
 
@@ -39,17 +39,17 @@ export default {
       districts: [
         {
           name: "Brunei Muara <br> Temburong",
-          value: "brunei"
+          value: "brunei",
         },
         {
           name: "Tutong",
-          value: "tutong"
+          value: "tutong",
         },
         {
           name: "Belait",
-          value: "belait"
-        }
-      ]
+          value: "belait",
+        },
+      ],
     };
   },
 
@@ -64,8 +64,8 @@ export default {
       eventBus.$emit("districtClicked", selectedDistrict);
     },
     refresh() {
-      location.reload()
-    }
-  }
+      location.reload();
+    },
+  },
 };
 </script>

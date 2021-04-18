@@ -11,8 +11,8 @@ export default {
   computed: {
     Version() {
       return pjson.version;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -32,12 +32,9 @@ export default {
         hour = hour + 12;
       }
 
-      return moment()
-        .hour(hour)
-        .minute(minute)
-        .second(0);
-    }
-  }
+      return moment().hour(hour).minute(minute).second(0);
+    },
+  },
 };
 
 function isObject(value) {

@@ -15,43 +15,43 @@ export default {
       september: [],
       october: [],
       november: [],
-      december: []
+      december: [],
     },
     prayer_name: [
       {
         name: "Imsak",
-        state: "am"
+        state: "am",
       },
       {
         name: "Subuh",
-        state: "am"
+        state: "am",
       },
       {
         name: "Syuruk",
-        state: "am"
+        state: "am",
       },
       {
         name: "Duha",
-        state: "am"
+        state: "am",
       },
       {
         name: "Zuhur",
-        state: "pm"
+        state: "pm",
       },
       {
         name: "Asar",
-        state: "pm"
+        state: "pm",
       },
       {
         name: "Maghrib",
-        state: "pm"
+        state: "pm",
       },
       {
         name: "Isya",
-        state: "pm"
-      }
+        state: "pm",
+      },
     ],
-    metadata: {}
+    metadata: {},
   },
 
   mutations: {
@@ -60,12 +60,12 @@ export default {
     },
     updateMetaData(state, data) {
       state.metadata = data;
-    }
+    },
   },
 
   getters: {
     getPrayerData(state) {
-      return date => {
+      return (date) => {
         try {
           var prayer_data = state.prayer_data[date.month][date.day_number];
           prayer_data.day = date.day_name;
@@ -80,7 +80,7 @@ export default {
     },
     getMetaData(state) {
       return state.metadata;
-    }
+    },
   },
 
   actions: {
@@ -97,7 +97,7 @@ export default {
 
         // Check for new data from database
         // if present, update data
-        checkNewData().then(isNewDataAvailable => {
+        checkNewData().then((isNewDataAvailable) => {
           if (isNewDataAvailable) {
             getDataFromFireBase(context);
           }
@@ -105,11 +105,11 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    }
-  }
+    },
+  },
 };
 
-let getDataFromLocalStorage = function(context) {
+let getDataFromLocalStorage = function (context) {
   console.log("Fetching data from local storage...");
   // Get data from local storage
   // save data to prayer_data vuex state
@@ -122,7 +122,7 @@ let getDataFromLocalStorage = function(context) {
   context.commit("updateMetaData", localStorage.local_storage_metadata);
 };
 
-let getDataFromFireBase = async function(context) {
+let getDataFromFireBase = async function (context) {
   console.log("Fetching data from Firebase...");
 
   // Get prayer data from firebase
@@ -139,7 +139,7 @@ let getDataFromFireBase = async function(context) {
   localStorage.local_storage_metadata = JSON.stringify(fetchedMetadata);
 };
 
-let checkNewData = async function() {
+let checkNewData = async function () {
   try {
     // return false if no data is available in local storage
     if (localStorage.local_storage_metadata === undefined) {
@@ -166,11 +166,11 @@ let checkNewData = async function() {
   }
 };
 
-let getDataFromFirebaseAndSaveToPrayerModule = async function(context) {
+let getDataFromFirebaseAndSaveToPrayerModule = async function (context) {
   try {
     let documents = await fb.waktuCollection.get();
     let index = 0;
-    documents.forEach(doc => {
+    documents.forEach((doc) => {
       if (index > 11) {
         return;
       }
@@ -184,11 +184,11 @@ let getDataFromFirebaseAndSaveToPrayerModule = async function(context) {
   }
 };
 
-let getDatabaseMetaDataFromFirebase = async function() {
+let getDatabaseMetaDataFromFirebase = async function () {
   try {
     let fbMetaData = await fb.DatabaseMetaData.get();
     let fetchedMetadata;
-    fbMetaData.forEach(metadata => {
+    fbMetaData.forEach((metadata) => {
       fetchedMetadata = metadata.data().data;
     });
     return fetchedMetadata;

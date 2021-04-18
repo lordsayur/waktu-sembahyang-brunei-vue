@@ -14,6 +14,6 @@ export default new Vuex.Store({
   modules: {
     prayers: prayersModule,
     months: monthsModule,
-    days: daysModule
-  }
+    days: daysModule,
+  },
 });

@@ -13,25 +13,25 @@ export default {
       { text: "September", value: 9 },
       { text: "October", value: 910 },
       { text: "November", value: 911 },
-      { text: "December", value: 912 }
-    ]
+      { text: "December", value: 912 },
+    ],
   },
 
   getters: {
     getComputerMonthName(state) {
-      return month => {
+      return (month) => {
         return state.months[month].text.toLowerCase();
       };
     },
 
     getDisplayMonthName(state) {
-      return month => {
+      return (month) => {
         return state.months[month].text;
       };
     },
 
     getAllDisplayMonthName(state) {
       return state.months;
-    }
-  }
+    },
+  },
 };

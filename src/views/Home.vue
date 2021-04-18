@@ -25,9 +25,7 @@
 
               <!-- TIMER -->
               <count-down
-                v-if="
-                  dayIndex == 0 && !(isIsya)
-                "
+                v-if="dayIndex == 0 && !isIsya"
                 :prayers-data="getTodayPrayerTime"
                 :TodayDate="TodayDate"
                 v-on:updatePrayerTime="updatePrayerTime($event)"
@@ -73,7 +71,7 @@ export default {
   name: "Home",
   components: {
     "display-info": DisplayInfo,
-    "count-down": CountDown
+    "count-down": CountDown,
   },
 
   data() {
@@ -89,27 +87,27 @@ export default {
           name: "Isnin",
           date: {
             hijrah: "10 RABIULAKHIR  1441",
-            masihi: "17 DECEMBER 2019"
+            masihi: "17 DECEMBER 2019",
           },
           prayers: [
             {
               name: "Imsak",
               time: "05:00",
-              state: "am"
-            }
-          ]
-        }
+              state: "am",
+            },
+          ],
+        },
       ],
       day: {
         today: 0,
         tomorrow: 1,
-        dayAfterTomorrow: 2
+        dayAfterTomorrow: 2,
       },
       districtOffset: {
         brunei: 0,
         tutong: 1,
-        belait: 3
-      }
+        belait: 3,
+      },
     };
   },
 
@@ -161,7 +159,7 @@ export default {
 
       var prayersTime = this.$store.getters["prayers/getPrayersTime"];
 
-      prayersTime.forEach(time => {
+      prayersTime.forEach((time) => {
         var tempPrayerObj = {};
         tempPrayerObj.name = time.name;
         tempPrayerObj.time = prayer_data[time.name];
@@ -191,7 +189,7 @@ export default {
       return {
         day_name,
         day_number,
-        month
+        month,
       };
     },
 
@@ -202,7 +200,7 @@ export default {
     },
 
     updatePrayerDataBasedOnDistrict(offsetDay) {
-      this.days[offsetDay].prayers.forEach(prayer => {
+      this.days[offsetDay].prayers.forEach((prayer) => {
         prayer.time.add(this.districtOffset[this.selectedDistrict], "m");
       });
     },
@@ -213,11 +211,11 @@ export default {
 
     registerEventBus() {
       // Update prayer data if selected district is changed
-      eventBus.$on("districtClicked", data => {
+      eventBus.$on("districtClicked", (data) => {
         this.selectedDistrict = data;
         this.updateData();
       });
-      eventBus.$on("preImsak", data => {
+      eventBus.$on("preImsak", (data) => {
         this.showPrayerTime = data;
       });
     },
@@ -226,7 +224,7 @@ export default {
       setTimeout(() => {
         this.isDisplayApp = true;
       }, 1000);
-    }
+    },
   },
 
   computed: {
@@ -235,7 +233,7 @@ export default {
     },
 
     DisplayPrayerTime() {
-      return prayer => {
+      return (prayer) => {
         let hour = prayer.time.hour();
         let minute = prayer.time.minute();
 
@@ -256,7 +254,7 @@ export default {
     },
 
     GetMasihiDate() {
-      return offset => {
+      return (offset) => {
         let date = moment(this.TodayDate);
         date = date.add(offset, "days");
         let day = date.date();
@@ -269,9 +267,9 @@ export default {
     },
 
     isIsya() {
-      return this.currentPrayerTime.currentPrayer === "Isya"
-    }
-  }
+      return this.currentPrayerTime.currentPrayer === "Isya";
+    },
+  },
 };
 </script>
 
