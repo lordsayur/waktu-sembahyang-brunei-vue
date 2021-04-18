@@ -11,7 +11,7 @@
 
 <script>
 import { eventBus } from "@/main";
-const moment = require("moment");
+import { differenceInMinutes, isAfter, subSeconds, add } from "date-fns";
 
 /**
  * @group Component
@@ -44,12 +44,15 @@ export default {
   data() {
     return {
       nextPrayer: {},
+      currentTime: null,
       time: "10",
       isIn: false,
     };
   },
 
   created() {
+    this.currentTime = this.$props.TodayDate;
+
     setInterval(() => {
       this.nextPrayer = this.getStatus().nextPrayer;
       this.updatePrayerTime();
@@ -70,13 +73,15 @@ export default {
         }
 
         let prayerTime = prayer;
-        let isCurrentTimeLessThanNextPrayerTime =
-          moment.duration(prayerTime.time.diff(currentTime))._data.minutes < 0;
-        let isCurrentTimeEqualToNextPrayerTime =
-          prayerTime.time.minute() === currentTime.minute() &&
-          prayerTime.time.hour() === currentTime.hour();
+        let isPrayerTimeCurrentlyIn = isAfter(
+          this.currentTime,
+          subSeconds(prayerTime.time, 1)
+        );
+        let isPrayerTimeIn =
+          prayerTime.time.getMinutes() === this.currentTime.getMinutes() &&
+          prayerTime.time.getHours() === this.currentTime.getHours();
 
-        if (isCurrentTimeLessThanNextPrayerTime) {
+        if (isPrayerTimeCurrentlyIn) {
           currentPrayer = prayer.name;
           currentPrayerIndex = index;
           nextPrayer.name = this.$props.prayersData[index + 1].name;
@@ -98,7 +103,7 @@ export default {
             currentPrayer = "Isya";
             currentPrayerIndex = 7;
           }
-          if (isCurrentTimeEqualToNextPrayerTime) {
+          if (isPrayerTimeIn) {
             this.isIn = true;
             currentPrayer = nextPrayer.name;
           } else {
@@ -118,14 +123,12 @@ export default {
     },
 
     updateCountdown() {
-      let currentTime = moment(this.$props.TodayDate);
       let nextPrayerIndex = this.nextPrayer.index;
       if (nextPrayerIndex === undefined) {
         nextPrayerIndex = 0;
       }
       let prayerTime = this.$props.prayersData[nextPrayerIndex];
-      let time = moment.duration(prayerTime.time.diff(currentTime))._data;
-      let minutes = time.hours * 60 + time.minutes + 1;
+      let minutes = differenceInMinutes(prayerTime.time, this.currentTime);
       return minutes;
     },
 

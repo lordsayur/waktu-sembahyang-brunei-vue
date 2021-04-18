@@ -57,7 +57,7 @@
 
 <script>
 import { eventBus } from "@/main";
-const moment = require("moment");
+import { add } from "date-fns";
 
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
@@ -79,7 +79,7 @@ export default {
       prayerData: {},
       selectedDistrict: "brunei",
       currentPrayerTime: {},
-      TodayDate: undefined,
+      TodayDate: new Date(),
       showPrayerTime: true,
       isDisplayApp: false,
       days: [
@@ -116,7 +116,7 @@ export default {
 
     // eslint-disable-next-line no-constant-condition
     if (false) {
-      this.TodayDate = `2021-04-11 02:40:01`;
+      this.TodayDate = new Date(`2021-04-17 04:44:00`);
     }
 
     this.registerEventBus();
@@ -165,7 +165,11 @@ export default {
         tempPrayerObj.time = prayer_data[time.name];
         tempPrayerObj.state = time.state;
 
-        tempPrayerObj.time = this.$getMomentPrayerTime(tempPrayerObj);
+        tempPrayerObj.time = this.$prasePrayerTime(
+          tempPrayerObj.time,
+          tempPrayerObj.state,
+          this.TodayDate
+        );
 
         tempObject.prayers.push(tempPrayerObj);
       });
@@ -178,13 +182,13 @@ export default {
     },
 
     getDateData(dateOffset) {
-      var todayDate = moment(this.TodayDate).add(dateOffset, "day");
+      let todayDate = add(this.TodayDate, { days: dateOffset });
       const day_name = this.$store.getters["days/getDisplayDayName"](
-        todayDate.day()
+        todayDate.getDay()
       );
-      const day_number = todayDate.date() - 1;
+      const day_number = todayDate.getDate() - 1;
       const month = this.$store.getters["months/getComputerMonthName"](
-        todayDate.month()
+        todayDate.getMonth()
       );
       return {
         day_name,
@@ -195,13 +199,14 @@ export default {
 
     getPrayerData(date) {
       var prayer_data = this.$store.getters["prayers/getPrayerData"](date);
-      this.wsbPrint("Prayer Data:", prayer_data);
       return prayer_data;
     },
 
     updatePrayerDataBasedOnDistrict(offsetDay) {
       this.days[offsetDay].prayers.forEach((prayer) => {
-        prayer.time.add(this.districtOffset[this.selectedDistrict], "m");
+        prayer.time = add(prayer.time, {
+          minutes: this.districtOffset[this.selectedDistrict],
+        });
       });
     },
 
@@ -234,8 +239,8 @@ export default {
 
     DisplayPrayerTime() {
       return (prayer) => {
-        let hour = prayer.time.hour();
-        let minute = prayer.time.minute();
+        let hour = prayer.time.getHours();
+        let minute = prayer.time.getMinutes();
 
         if (hour > 12) {
           hour = hour - 12;
@@ -255,13 +260,12 @@ export default {
 
     GetMasihiDate() {
       return (offset) => {
-        let date = moment(this.TodayDate);
-        date = date.add(offset, "days");
-        let day = date.date();
+        let date = add(this.TodayDate, { days: offset });
+        let day = date.getDate();
         let month = this.$store.getters["months/getDisplayMonthName"](
-          date.month()
+          date.getMonth()
         );
-        let year = date.year();
+        let year = date.getFullYear();
         return `${day} ${month} ${year}`;
       };
     },
