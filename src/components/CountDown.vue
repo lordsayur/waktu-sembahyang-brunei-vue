@@ -151,7 +151,15 @@ export default {
 
   computed: {
     isActive() {
-      return this.time < this.$props.activeStart;
+      let nextPrayerIndex = this.nextPrayer.index;
+      if (nextPrayerIndex === undefined) {
+        nextPrayerIndex = 0;
+      }
+      let prayerTime = this.$props.prayersData[nextPrayerIndex];
+      return (
+        differenceInSeconds(prayerTime.time, this.currentTime) <
+        this.$props.activeStart * 60
+      );
     },
   },
 };
