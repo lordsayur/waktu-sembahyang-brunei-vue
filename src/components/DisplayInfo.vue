@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="FilterPrayer"
+    v-if="isVisible"
     class="d-flex justify-center info-display"
     :class="{ active: isActive }"
   >
@@ -19,7 +19,7 @@ export default {
   name: "DisplayInfo",
   props: {
     // Show or hide the specific info
-    showPrayerTime: {
+    isBeforeZuhur: {
       type: Boolean,
     },
     // Index of the info in the data's array
@@ -53,22 +53,27 @@ export default {
       type: Boolean,
       default: false,
     },
+    prayerTime: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
 
   computed: {
-    FilterPrayer() {
+    isVisible() {
+      if (!this.$props.prayerTime) return true;
       // Hide Imsak for next day
-      if (this.$props.dayIndex == 0) {
-        if (this.$props.prayerIndex < 4) {
-          return this.$props.showPrayerTime;
-        } else if (this.$props.prayerIndex > 7) {
-          return !this.$props.showPrayerTime;
-        } else {
-          return true;
-        }
-      } else {
+      if (
+        this.$props.dayIndex > 0 &&
+        this.$props.prayerTime.currentPrayerIndex < 8
+      )
         return true;
-      }
+
+      return (
+        (this.$props.isBeforeZuhur && this.$props.prayerIndex < 8) ||
+        (!this.$props.isBeforeZuhur && this.$props.prayerIndex > 3)
+      );
     },
   },
 };

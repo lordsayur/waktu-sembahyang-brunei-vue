@@ -25,7 +25,7 @@
 
               <!-- TIMER -->
               <count-down
-                v-if="dayIndex == 0 && !isIsya"
+                v-if="dayIndex == 0 && !IsIsyaAndBeforeMidnight"
                 :prayers-data="getTodayPrayerTime"
                 :TodayDate="TodayDate"
                 v-on:updatePrayerTime="updatePrayerTime($event)"
@@ -36,7 +36,7 @@
                 v-for="(prayer, prayerIndex) in day.prayers"
                 :key="prayerIndex"
                 class="prayer"
-                :showPrayerTime="showPrayerTime"
+                :isBeforeZuhur="IsBeforeZuhur"
                 :prayerIndex="prayerIndex"
                 :dayIndex="dayIndex"
                 :left-text="prayer.name"
@@ -46,6 +46,7 @@
                   prayer.name === currentPrayerTime.currentPrayer &&
                     dayIndex == 0
                 "
+                :prayerTime="currentPrayerTime"
               />
             </div>
           </v-col>
@@ -57,7 +58,7 @@
 
 <script>
 import { eventBus } from "@/main";
-const moment = require("moment");
+import { add, isAfter, isBefore } from "date-fns";
 
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
@@ -79,8 +80,7 @@ export default {
       prayerData: {},
       selectedDistrict: "brunei",
       currentPrayerTime: {},
-      TodayDate: undefined,
-      showPrayerTime: true,
+      TodayDate: new Date(),
       isDisplayApp: false,
       days: [
         {
@@ -116,7 +116,10 @@ export default {
 
     // eslint-disable-next-line no-constant-condition
     if (false) {
-      this.TodayDate = `2021-04-11 02:40:01`;
+      this.TodayDate = new Date(`2021-04-17 00:00:00`);
+      setInterval(() => {
+        this.TodayDate = add(this.TodayDate, { minutes: 1 });
+      }, 10);
     }
 
     this.registerEventBus();
@@ -134,11 +137,6 @@ export default {
       } catch (error) {
         console.error(error);
       }
-      // setInterval(() => {
-      //   if (this.currentPrayerTime.currentPrayerIndex > 3) {
-      //     this.showPrayerTime = false;
-      //   }
-      // }, 500);
     },
 
     formatandPushPrayerDataToDays(offsetDay) {
@@ -165,7 +163,11 @@ export default {
         tempPrayerObj.time = prayer_data[time.name];
         tempPrayerObj.state = time.state;
 
-        tempPrayerObj.time = this.$getMomentPrayerTime(tempPrayerObj);
+        tempPrayerObj.time = this.$prasePrayerTime(
+          tempPrayerObj.time,
+          tempPrayerObj.state,
+          this.TodayDate
+        );
 
         tempObject.prayers.push(tempPrayerObj);
       });
@@ -178,13 +180,13 @@ export default {
     },
 
     getDateData(dateOffset) {
-      var todayDate = moment(this.TodayDate).add(dateOffset, "day");
+      let todayDate = add(this.TodayDate, { days: dateOffset });
       const day_name = this.$store.getters["days/getDisplayDayName"](
-        todayDate.day()
+        todayDate.getDay()
       );
-      const day_number = todayDate.date() - 1;
+      const day_number = todayDate.getDate() - 1;
       const month = this.$store.getters["months/getComputerMonthName"](
-        todayDate.month()
+        todayDate.getMonth()
       );
       return {
         day_name,
@@ -195,13 +197,14 @@ export default {
 
     getPrayerData(date) {
       var prayer_data = this.$store.getters["prayers/getPrayerData"](date);
-      this.wsbPrint("Prayer Data:", prayer_data);
       return prayer_data;
     },
 
     updatePrayerDataBasedOnDistrict(offsetDay) {
       this.days[offsetDay].prayers.forEach((prayer) => {
-        prayer.time.add(this.districtOffset[this.selectedDistrict], "m");
+        prayer.time = add(prayer.time, {
+          minutes: this.districtOffset[this.selectedDistrict],
+        });
       });
     },
 
@@ -214,9 +217,6 @@ export default {
       eventBus.$on("districtClicked", (data) => {
         this.selectedDistrict = data;
         this.updateData();
-      });
-      eventBus.$on("preImsak", (data) => {
-        this.showPrayerTime = data;
       });
     },
 
@@ -232,10 +232,14 @@ export default {
       return this.days[0].prayers;
     },
 
+    IsBeforeZuhur() {
+      return this.currentPrayerTime.currentPrayerIndex < 4;
+    },
+
     DisplayPrayerTime() {
       return (prayer) => {
-        let hour = prayer.time.hour();
-        let minute = prayer.time.minute();
+        let hour = prayer.time.getHours();
+        let minute = prayer.time.getMinutes();
 
         if (hour > 12) {
           hour = hour - 12;
@@ -255,19 +259,32 @@ export default {
 
     GetMasihiDate() {
       return (offset) => {
-        let date = moment(this.TodayDate);
-        date = date.add(offset, "days");
-        let day = date.date();
+        let date = add(this.TodayDate, { days: offset });
+        let day = date.getDate();
         let month = this.$store.getters["months/getDisplayMonthName"](
-          date.month()
+          date.getMonth()
         );
-        let year = date.year();
+        let year = date.getFullYear();
         return `${day} ${month} ${year}`;
       };
     },
 
-    isIsya() {
-      return this.currentPrayerTime.currentPrayer === "Isya";
+    IsIsyaAndBeforeMidnight() {
+      let afterSeven = new Date(this.TodayDate.getTime());
+      afterSeven.setHours(19);
+      afterSeven.setMinutes(0);
+      afterSeven.setSeconds(0);
+
+      let midnight = new Date(this.TodayDate.getTime());
+      midnight.setHours(23);
+      midnight.setMinutes(59);
+      midnight.setSeconds(59);
+
+      return (
+        isAfter(this.TodayDate, afterSeven) &&
+        isBefore(this.TodayDate, midnight) &&
+        this.currentPrayerTime.currentPrayer == "Isya"
+      );
     },
   },
 };
