@@ -59,7 +59,7 @@ export default {
       this.updatePrayerTime();
       this.time = this.updateCountdown();
       // this.currentTime = add(this.currentTime, { minutes: 1 });
-    }, 100);
+    }, 500);
   },
 
   methods: {

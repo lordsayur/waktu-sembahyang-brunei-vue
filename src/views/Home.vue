@@ -115,11 +115,11 @@ export default {
     await this.$store.dispatch("prayers/getPrayerData");
 
     // eslint-disable-next-line no-constant-condition
+    setInterval(() => {
+      this.TodayDate = new Date();
+    }, 500);
     if (false) {
       this.TodayDate = new Date(`2021-04-17 00:00:00`);
-      setInterval(() => {
-        this.TodayDate = add(this.TodayDate, { minutes: 1 });
-      }, 10);
     }
 
     this.registerEventBus();
