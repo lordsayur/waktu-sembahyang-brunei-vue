@@ -3,14 +3,20 @@
     <p v-if="!nextPrayer.name">Assalamualaikum</p>
     <p v-else-if="isIn">Sudah masuk waktu {{ currentPrayer }}</p>
     <p v-else>
-      <span :class="{ active: isActive }">{{ time }}</span> minit lagi kn masuk
-      waktu <span :class="{ active: isActive }">{{ nextPrayer.name }}</span>
+      <span :class="{ active: isActive }">{{ time }}</span> lagi kn masuk waktu
+      <span :class="{ active: isActive }">{{ nextPrayer.name }}</span>
     </p>
   </div>
 </template>
 
 <script>
-import { differenceInMinutes, isAfter, subSeconds, isBefore } from "date-fns";
+import {
+  differenceInMinutes,
+  isAfter,
+  subSeconds,
+  isBefore,
+  differenceInSeconds,
+} from "date-fns";
 
 /**
  * @group Component
@@ -127,7 +133,13 @@ export default {
       }
       let prayerTime = this.$props.prayersData[nextPrayerIndex];
       let minutes = differenceInMinutes(prayerTime.time, this.currentTime);
-      return minutes;
+
+      if (minutes < 1) {
+        let seconds = differenceInSeconds(prayerTime.time, this.currentTime);
+        return seconds + " saat";
+      }
+
+      return minutes + " minit";
     },
 
     updatePrayerTime() {
