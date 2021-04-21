@@ -1,7 +1,7 @@
 <template>
   <div class="count-down">
     <p v-if="!nextPrayer.name">Assalamualaikum</p>
-    <p v-else-if="isIn">Sudah masuk waktu {{ nextPrayer.name }}</p>
+    <p v-else-if="isIn">Sudah masuk waktu {{ currentPrayer }}</p>
     <p v-else>
       <span :class="{ active: isActive }">{{ time }}</span> minit lagi kn masuk
       waktu <span :class="{ active: isActive }">{{ nextPrayer.name }}</span>
@@ -10,8 +10,7 @@
 </template>
 
 <script>
-import { eventBus } from "@/main";
-import { differenceInMinutes, isAfter, subSeconds, add } from "date-fns";
+import { differenceInMinutes, isAfter, subSeconds, isBefore } from "date-fns";
 
 /**
  * @group Component
@@ -44,6 +43,7 @@ export default {
   data() {
     return {
       nextPrayer: {},
+      currentPrayer: "",
       currentTime: null,
       time: "10",
       isIn: false,
@@ -51,23 +51,25 @@ export default {
   },
 
   created() {
-    this.currentTime = this.$props.TodayDate;
-
     setInterval(() => {
+      this.currentTime = this.$props.TodayDate;
+
       this.nextPrayer = this.getStatus().nextPrayer;
+      this.currentPrayer = this.getStatus().currentPrayer;
       this.updatePrayerTime();
       this.time = this.updateCountdown();
-    }, 500);
+      // this.currentTime = add(this.currentTime, { minutes: 1 });
+    }, 100);
   },
 
   methods: {
     getStatus() {
-      let currentTime = moment(this.$props.TodayDate);
       let currentPrayer = "";
       let currentPrayerIndex = 0;
       let nextPrayer = {};
 
       this.$props.prayersData.forEach((prayer, index) => {
+        // Dont check if prayer is nextImsak and nextSubuh
         if (index > 7) {
           return;
         }
@@ -86,33 +88,29 @@ export default {
           currentPrayerIndex = index;
           nextPrayer.name = this.$props.prayersData[index + 1].name;
           nextPrayer.index = index + 1;
-          if (currentPrayerIndex > 3) {
-            eventBus.$emit("preImsak", false);
-          }
-        } else {
-          if (index === 0) {
-            // Set preImsak to be true
-            // @arg The argument is a boolean value representing the state of pre Imsak
-            eventBus.$emit("preImsak", true);
-          } else if (this.nextPrayer.index !== index) {
-            return;
-          }
-          if (index === 0) {
-            nextPrayer.name = "Imsak";
-            nextPrayer.index = 0;
-            currentPrayer = "Isya";
-            currentPrayerIndex = 7;
-          }
-          if (isPrayerTimeIn) {
-            this.isIn = true;
-            currentPrayer = nextPrayer.name;
-          } else {
-            this.isIn = false;
-            if (index === 0) {
-              this.isIn = true;
-            }
-          }
+
+          this.isIn = isPrayerTimeIn;
+
+          // if current prayer is zohor onwards, hide today's imsak, subuh & doha
         }
+
+        if (isBefore(this.currentTime, this.$props.prayersData[0].time)) {
+          currentPrayer = "Isya";
+          currentPrayerIndex = 7;
+          nextPrayer.name = "Imsak";
+          nextPrayer.index = 0;
+        }
+        // else {
+        //   if (this.nextPrayer.index !== index) return;
+
+        //   if (index === 0) {
+        //     currentPrayer = "Isya";
+        //     currentPrayerIndex = 7;
+        //   }
+        // }
+        //   if (index === 0) {
+        //     this.isIn = true;
+        //   }
       });
 
       return {

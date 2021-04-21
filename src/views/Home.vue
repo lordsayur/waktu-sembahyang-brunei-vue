@@ -25,7 +25,7 @@
 
               <!-- TIMER -->
               <count-down
-                v-if="dayIndex == 0 && !isIsya"
+                v-if="dayIndex == 0 && !IsIsyaAndBeforeMidnight"
                 :prayers-data="getTodayPrayerTime"
                 :TodayDate="TodayDate"
                 v-on:updatePrayerTime="updatePrayerTime($event)"
@@ -36,7 +36,7 @@
                 v-for="(prayer, prayerIndex) in day.prayers"
                 :key="prayerIndex"
                 class="prayer"
-                :isBeforeZuhur="showPrayerTime"
+                :isBeforeZuhur="IsBeforeZuhur"
                 :prayerIndex="prayerIndex"
                 :dayIndex="dayIndex"
                 :left-text="prayer.name"
@@ -58,7 +58,7 @@
 
 <script>
 import { eventBus } from "@/main";
-import { add } from "date-fns";
+import { add, isAfter, isBefore } from "date-fns";
 
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
@@ -81,7 +81,6 @@ export default {
       selectedDistrict: "brunei",
       currentPrayerTime: {},
       TodayDate: new Date(),
-      showPrayerTime: true,
       isDisplayApp: false,
       days: [
         {
@@ -117,7 +116,10 @@ export default {
 
     // eslint-disable-next-line no-constant-condition
     if (false) {
-      this.TodayDate = new Date(`2021-04-17 04:44:00`);
+      this.TodayDate = new Date(`2021-04-17 00:00:00`);
+      setInterval(() => {
+        this.TodayDate = add(this.TodayDate, { minutes: 1 });
+      }, 10);
     }
 
     this.registerEventBus();
@@ -216,9 +218,6 @@ export default {
         this.selectedDistrict = data;
         this.updateData();
       });
-      eventBus.$on("preImsak", (data) => {
-        this.showPrayerTime = data;
-      });
     },
 
     getDisplayAppStatus() {
@@ -231,6 +230,10 @@ export default {
   computed: {
     getTodayPrayerTime() {
       return this.days[0].prayers;
+    },
+
+    IsBeforeZuhur() {
+      return this.currentPrayerTime.currentPrayerIndex < 4;
     },
 
     DisplayPrayerTime() {
@@ -266,8 +269,22 @@ export default {
       };
     },
 
-    isIsya() {
-      return this.currentPrayerTime.currentPrayer === "Isya";
+    IsIsyaAndBeforeMidnight() {
+      let afterSeven = new Date(this.TodayDate.getTime());
+      afterSeven.setHours(19);
+      afterSeven.setMinutes(0);
+      afterSeven.setSeconds(0);
+
+      let midnight = new Date(this.TodayDate.getTime());
+      midnight.setHours(23);
+      midnight.setMinutes(59);
+      midnight.setSeconds(59);
+
+      return (
+        isAfter(this.TodayDate, afterSeven) &&
+        isBefore(this.TodayDate, midnight) &&
+        this.currentPrayerTime.currentPrayer == "Isya"
+      );
     },
   },
 };
