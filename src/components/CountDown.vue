@@ -11,12 +11,13 @@
 
 <script>
 import {
-  differenceInMinutes,
   isAfter,
   subSeconds,
   isBefore,
   add,
   differenceInSeconds,
+  differenceInMinutes,
+  formatDistance,
   formatDistanceStrict,
 } from "date-fns";
 import { ms } from "date-fns/locale";
@@ -122,8 +123,14 @@ export default {
       }
       let prayerTime = this.$props.prayersData[nextPrayerIndex];
 
-      return formatDistanceStrict(this.currentTime, prayerTime.time, {
-        roundingMethod: "ceil",
+      if (differenceInMinutes(prayerTime.time, this.currentTime) < 60) {
+        return formatDistanceStrict(this.currentTime, prayerTime.time, {
+          roundingMethod: "ceil",
+          locale: ms,
+        });
+      }
+
+      return formatDistance(this.currentTime, prayerTime.time, {
         locale: ms,
       });
     },
