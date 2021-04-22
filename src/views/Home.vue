@@ -20,7 +20,7 @@
                 class="date"
                 :left-text="GetMasihiDate(dayIndex)"
                 middle-text="|"
-                :right-text="day.date.hijrah"
+                :right-text="GetHijrahDate"
               />
 
               <!-- TIMER -->
@@ -275,6 +275,21 @@ export default {
         let year = date.getFullYear();
         return `${day} ${month} ${year}`;
       };
+    },
+
+    GetHijrahDate() {
+      const reg = /[0-9]+/m;
+      const today = this.days[0].date.hijrah;
+
+      if (this.currentPrayerTime.currentPrayerIndex > 5) {
+        const day = today.match(reg);
+        const nextDay = +day + 1;
+        const nextDate = today.replace(reg, nextDay);
+
+        return nextDay < 10 ? "0" + nextDate : nextDate;
+      }
+
+      return today;
     },
 
     IsIsyaAndBeforeMidnight() {
