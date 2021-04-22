@@ -53,7 +53,14 @@ export default {
     };
   },
 
+  mounted() {
+    this.selectedDistrict = this.getSelectedDistrict();
+  },
+
   methods: {
+    getSelectedDistrict() {
+      return localStorage.getItem("selectedDistrict") || "Brunei";
+    },
     updateSelectedDistrict(selectedDistrict) {
       // Stop this function if recently clicked district if the same as
       // currently selected district
@@ -62,6 +69,7 @@ export default {
       // Fire when the selected district is changed.
       // @arg The argument is a string value representing the text of the selected district
       eventBus.$emit("districtClicked", selectedDistrict);
+      localStorage.setItem("selectedDistrict", selectedDistrict);
     },
     refresh() {
       location.reload();
