@@ -5,7 +5,7 @@ describe("wsbPrint", () => {
   jest.spyOn(console, "log");
   const Component = {
     render() {},
-    mixins: [global]
+    mixins: [global],
   };
   const wrapper = shallowMount(Component);
 

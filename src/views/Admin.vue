@@ -49,9 +49,7 @@
 
     <v-snackbar v-model="state.isUploaded">
       Upload successful
-      <v-btn color="pink" text @click="state.isUploaded = false">
-        Close
-      </v-btn>
+      <v-btn color="pink" text @click="state.isUploaded = false"> Close </v-btn>
     </v-snackbar>
   </v-container>
 </template>
@@ -76,8 +74,8 @@ export default {
       state: {
         isUploadable: false,
         isUploaded: false,
-        isProcessing: false
-      }
+        isProcessing: false,
+      },
     };
   },
 
@@ -94,7 +92,7 @@ export default {
       let linesOfText = splitTextByNewLine(this.originalText);
 
       this.days = [];
-      linesOfText.forEach(line => {
+      linesOfText.forEach((line) => {
         let texts = splitTextByTab(line);
         let day = {};
 
@@ -108,7 +106,7 @@ export default {
           "Zuhur",
           "Asar",
           "Maghrib",
-          "Isya"
+          "Isya",
         ];
 
         properties.forEach((property, index) => {
@@ -128,7 +126,7 @@ export default {
 
         // upload prayer data to firebase
         await fb.waktuCollection.doc(`${this.selected_month}`).set({
-          Day: this.days
+          Day: this.days,
         });
 
         // get current metadata version, increment it, and update firebase meta data version
@@ -136,7 +134,7 @@ export default {
         localMetadata = JSON.parse(localMetadata);
 
         await fb.DatabaseMetaData.doc("data").set({
-          data: { version: localMetadata.version + 1 }
+          data: { version: localMetadata.version + 1 },
         });
         console.log("New metadata version", localMetadata.version + 1);
 
@@ -148,10 +146,10 @@ export default {
     },
 
     splitTextBy(splitBy) {
-      return text => {
+      return (text) => {
         return text.split(splitBy);
       };
-    }
+    },
   },
 
   computed: {
@@ -161,8 +159,8 @@ export default {
       } else {
         return false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -17,12 +17,12 @@ export default {
   name: "App",
 
   components: {
-    "wsb-version": WsbVersion
+    "wsb-version": WsbVersion,
   },
 
   data: () => ({
     //
-  })
+  }),
 };
 </script>
 

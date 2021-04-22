@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="FilterPrayer"
+    v-if="isVisible"
     class="d-flex justify-center info-display"
     :class="{ active: isActive }"
   >
@@ -19,58 +19,63 @@ export default {
   name: "DisplayInfo",
   props: {
     // Show or hide the specific info
-    showPrayerTime: {
-      type: Boolean
+    isBeforeZuhur: {
+      type: Boolean,
     },
     // Index of the info in the data's array
     prayerIndex: {
-      type: Number
+      type: Number,
     },
     // Index of the day in the data's array
     dayIndex: {
-      type: Number
+      type: Number,
     },
     // Text on the left side
     leftText: {
       type: String,
       required: true,
-      default: "left"
+      default: "left",
     },
     // Text on the right side
     rightText: {
       type: String,
       required: true,
-      default: "right"
+      default: "right",
     },
     // Text on the middle
     middleText: {
       type: String,
       required: true,
-      default: ","
+      default: ",",
     },
     // If the specific info need to be highlighted
     isActive: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    prayerTime: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
 
   computed: {
-    FilterPrayer() {
+    isVisible() {
+      if (!this.$props.prayerTime) return true;
       // Hide Imsak for next day
-      if (this.$props.dayIndex == 0) {
-        if (this.$props.prayerIndex < 4) {
-          return this.$props.showPrayerTime;
-        } else if (this.$props.prayerIndex > 7) {
-          return !this.$props.showPrayerTime;
-        } else {
-          return true;
-        }
-      } else {
+      if (
+        this.$props.dayIndex > 0 &&
+        this.$props.prayerTime.currentPrayerIndex < 8
+      )
         return true;
-      }
-    }
-  }
+
+      return (
+        (this.$props.isBeforeZuhur && this.$props.prayerIndex < 8) ||
+        (!this.$props.isBeforeZuhur && this.$props.prayerIndex > 3)
+      );
+    },
+  },
 };
 </script>
 

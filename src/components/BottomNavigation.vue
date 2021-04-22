@@ -18,8 +18,8 @@
       <span v-html="district.name"></span>
     </v-btn>
     <v-btn text icon @click="refresh">
-        <v-icon>refresh</v-icon>
-      </v-btn>
+      <v-icon>refresh</v-icon>
+    </v-btn>
   </v-bottom-navigation>
 </template>
 
@@ -39,21 +39,28 @@ export default {
       districts: [
         {
           name: "Brunei Muara <br> Temburong",
-          value: "brunei"
+          value: "brunei",
         },
         {
           name: "Tutong",
-          value: "tutong"
+          value: "tutong",
         },
         {
           name: "Belait",
-          value: "belait"
-        }
-      ]
+          value: "belait",
+        },
+      ],
     };
   },
 
+  mounted() {
+    this.selectedDistrict = this.getSelectedDistrict();
+  },
+
   methods: {
+    getSelectedDistrict() {
+      return localStorage.getItem("selectedDistrict") || "Brunei";
+    },
     updateSelectedDistrict(selectedDistrict) {
       // Stop this function if recently clicked district if the same as
       // currently selected district
@@ -62,10 +69,11 @@ export default {
       // Fire when the selected district is changed.
       // @arg The argument is a string value representing the text of the selected district
       eventBus.$emit("districtClicked", selectedDistrict);
+      localStorage.setItem("selectedDistrict", selectedDistrict);
     },
     refresh() {
-      location.reload()
-    }
-  }
+      location.reload();
+    },
+  },
 };
 </script>

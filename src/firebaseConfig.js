@@ -9,7 +9,7 @@ const config = {
   projectId: "waktu-sembahyang-brunei",
   storageBucket: "waktu-sembahyang-brunei.appspot.com",
   messagingSenderId: "754965478900",
-  appId: "1:754965478900:web:5eae067867fc6a771e4da1"
+  appId: "1:754965478900:web:5eae067867fc6a771e4da1",
 };
 firebase.initializeApp(config);
 
@@ -33,5 +33,5 @@ export {
   // auth,
   // currentUser,
   waktuCollection,
-  DatabaseMetaData
+  DatabaseMetaData,
 };
