@@ -174,7 +174,7 @@ export default {
         tempPrayerObj.time = this.$prasePrayerTime(
           tempPrayerObj.time,
           tempPrayerObj.state,
-          add(this.TodayDate, {days: offsetDay})
+          add(this.TodayDate, { days: offsetDay })
         );
 
         tempObject.prayers.push(tempPrayerObj);
