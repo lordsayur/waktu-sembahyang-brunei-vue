@@ -15,6 +15,7 @@ import {
   isAfter,
   subSeconds,
   isBefore,
+  add,
   differenceInSeconds,
 } from "date-fns";
 
@@ -64,7 +65,6 @@ export default {
       this.currentPrayer = this.getStatus().currentPrayer;
       this.updatePrayerTime();
       this.time = this.updateCountdown();
-      // this.currentTime = add(this.currentTime, { minutes: 1 });
     }, 500);
   },
 
@@ -96,8 +96,6 @@ export default {
           nextPrayer.index = index + 1;
 
           this.isIn = isPrayerTimeIn;
-
-          // if current prayer is zohor onwards, hide today's imsak, subuh & doha
         }
 
         if (isBefore(this.currentTime, this.$props.prayersData[0].time)) {
@@ -106,17 +104,6 @@ export default {
           nextPrayer.name = "Imsak";
           nextPrayer.index = 0;
         }
-        // else {
-        //   if (this.nextPrayer.index !== index) return;
-
-        //   if (index === 0) {
-        //     currentPrayer = "Isya";
-        //     currentPrayerIndex = 7;
-        //   }
-        // }
-        //   if (index === 0) {
-        //     this.isIn = true;
-        //   }
       });
 
       return {
