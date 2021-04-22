@@ -15,6 +15,18 @@
               <!-- DAY -->
               <h1>{{ day.name }}</h1>
 
+              <section id="debug" v-if="$route.query.debug">
+                <button @click="addDT('hours')">➕</button>
+                {{ TodayDate.getHours() }} h
+                <button @click="subDT('hours')">➖</button>
+                <button @click="addDT('minutes')">➕</button>
+                {{ TodayDate.getMinutes() }} m
+                <button @click="subDT('minutes')">➖</button>
+                <button @click="addDT('seconds')">➕</button>
+                {{ TodayDate.getSeconds() }} s
+                <button @click="subDT('seconds')">➖</button>
+              </section>
+
               <!-- DATE  -->
               <display-info
                 class="date"
@@ -58,7 +70,7 @@
 
 <script>
 import { eventBus } from "@/main";
-import { add, isWithinInterval } from "date-fns";
+import { add, sub, isWithinInterval } from "date-fns";
 
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
@@ -233,6 +245,14 @@ export default {
         this.isDisplayApp = true;
       }, 1000);
     },
+
+    addDT(interval) {
+      this.TodayDate = add(this.TodayDate, { [interval]: 1 });
+    },
+
+    subDT(interval) {
+      this.TodayDate = sub(this.TodayDate, { [interval]: 1 });
+    },
   },
 
   computed: {
@@ -327,5 +347,14 @@ export default {
 }
 .prayer {
   font-size: 1.5rem;
+}
+#debug {
+  padding: 2rem;
+  border: 1px solid white;
+  width: 50%;
+  margin: 1rem auto;
+  button {
+    padding: 0.5rem;
+  }
 }
 </style>
