@@ -58,7 +58,7 @@
 
 <script>
 import { eventBus } from "@/main";
-import { add, isAfter, isBefore } from "date-fns";
+import { add, isWithinInterval } from "date-fns";
 
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
@@ -281,7 +281,10 @@ export default {
       const reg = /[0-9]+/m;
       const today = this.days[0].date.hijrah;
 
-      if (this.currentPrayerTime.currentPrayerIndex > 5) {
+      if (
+        this.currentPrayerTime.currentPrayerIndex > 5 &&
+        this.IsFirstHalfNight
+      ) {
         const day = today.match(reg);
         const nextDay = +day + 1;
         const nextDate = today.replace(reg, nextDay);
@@ -292,21 +295,26 @@ export default {
       return today;
     },
 
-    IsIsyaAndBeforeMidnight() {
-      let afterSeven = new Date(this.TodayDate.getTime());
-      afterSeven.setHours(19);
-      afterSeven.setMinutes(0);
-      afterSeven.setSeconds(0);
+    IsFirstHalfNight() {
+      let afterSix = new Date(this.TodayDate.getTime());
+      afterSix.setHours(18);
+      afterSix.setMinutes(0);
+      afterSix.setSeconds(0);
 
       let midnight = new Date(this.TodayDate.getTime());
       midnight.setHours(23);
       midnight.setMinutes(59);
       midnight.setSeconds(59);
 
+      return isWithinInterval(this.TodayDate, {
+        start: afterSix,
+        end: midnight,
+      });
+    },
+
+    IsIsyaAndBeforeMidnight() {
       return (
-        isAfter(this.TodayDate, afterSeven) &&
-        isBefore(this.TodayDate, midnight) &&
-        this.currentPrayerTime.currentPrayer == "Isya"
+        this.IsFirstHalfNight && this.currentPrayerTime.currentPrayer == "Isya"
       );
     },
   },
