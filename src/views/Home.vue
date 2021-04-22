@@ -114,12 +114,20 @@ export default {
   async created() {
     await this.$store.dispatch("prayers/getPrayerData");
 
-    // eslint-disable-next-line no-constant-condition
-    setInterval(() => {
-      this.TodayDate = new Date();
-    }, 500);
-    if (false) {
-      this.TodayDate = new Date(`2021-04-17 00:00:00`);
+    let customDateTime = this.$route.query.dt;
+    if (customDateTime) {
+      this.TodayDate = new Date(customDateTime);
+      if (this.$route.query.speed) {
+        setInterval(() => {
+          this.TodayDate = add(this.TodayDate, {
+            [this.$route.query.interval]: 1,
+          });
+        }, this.$route.query.speed);
+      }
+    } else {
+      setInterval(() => {
+        this.TodayDate = new Date();
+      }, 500);
     }
 
     this.registerEventBus();
