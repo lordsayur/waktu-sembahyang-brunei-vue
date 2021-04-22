@@ -17,7 +17,9 @@ import {
   isBefore,
   add,
   differenceInSeconds,
+  formatDistanceStrict,
 } from "date-fns";
+import { ms } from "date-fns/locale";
 
 /**
  * @group Component
@@ -119,14 +121,11 @@ export default {
         nextPrayerIndex = 0;
       }
       let prayerTime = this.$props.prayersData[nextPrayerIndex];
-      let minutes = differenceInMinutes(prayerTime.time, this.currentTime);
 
-      if (minutes < 1) {
-        let seconds = differenceInSeconds(prayerTime.time, this.currentTime);
-        return seconds + " saat";
-      }
-
-      return minutes + " minit";
+      return formatDistanceStrict(this.currentTime, prayerTime.time, {
+        roundingMethod: "ceil",
+        locale: ms,
+      });
     },
 
     updatePrayerTime() {
