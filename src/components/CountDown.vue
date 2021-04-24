@@ -60,17 +60,6 @@ export default {
     };
   },
 
-  created() {
-    setInterval(() => {
-      this.currentTime = this.$props.TodayDate;
-
-      this.nextPrayer = this.getStatus().nextPrayer;
-      this.currentPrayer = this.getStatus().currentPrayer;
-      this.updatePrayerTime();
-      this.time = this.updateCountdown();
-    }, 500);
-  },
-
   methods: {
     getStatus() {
       let currentPrayer = "";
@@ -153,6 +142,17 @@ export default {
         differenceInSeconds(prayerTime.time, this.currentTime) <
         this.$props.activeStart * 60
       );
+    },
+  },
+
+  watch: {
+    TodayDate() {
+      this.currentTime = this.$props.TodayDate;
+
+      this.nextPrayer = this.getStatus().nextPrayer;
+      this.currentPrayer = this.getStatus().currentPrayer;
+      this.updatePrayerTime();
+      this.time = this.updateCountdown();
     },
   },
 };
