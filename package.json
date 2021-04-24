@@ -21,6 +21,7 @@
     "core-js": "^3.4.3",
     "date-fns": "^2.21.1",
     "firebase": "^7.7.0",
+    "push.js": "^1.0.12",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-resource": "^1.5.1",
