@@ -21,6 +21,7 @@ import {
   formatDistanceStrict,
 } from "date-fns";
 import { ms } from "date-fns/locale";
+import Push from "push.js";
 
 /**
  * @group Component
@@ -58,17 +59,6 @@ export default {
       time: "10",
       isIn: false,
     };
-  },
-
-  created() {
-    setInterval(() => {
-      this.currentTime = this.$props.TodayDate;
-
-      this.nextPrayer = this.getStatus().nextPrayer;
-      this.currentPrayer = this.getStatus().currentPrayer;
-      this.updatePrayerTime();
-      this.time = this.updateCountdown();
-    }, 500);
   },
 
   methods: {
@@ -153,6 +143,39 @@ export default {
         differenceInSeconds(prayerTime.time, this.currentTime) <
         this.$props.activeStart * 60
       );
+    },
+  },
+
+  watch: {
+    TodayDate() {
+      this.currentTime = this.$props.TodayDate;
+
+      this.nextPrayer = this.getStatus().nextPrayer;
+      this.currentPrayer = this.getStatus().currentPrayer;
+      this.updatePrayerTime();
+      this.time = this.updateCountdown();
+    },
+    isIn(newState, oldState) {
+      if (oldState == false && newState == true) {
+        const message = `Sudah masuk waktu ${this.currentPrayer}`;
+        Push.create(message, {
+          body: `Selamat menunaikan solat ${this.currentPrayer}`,
+          icon: require("../../public/img/icons/android-chrome-512x512.png"),
+          timeout: 5000,
+        });
+        this.$store.state.notificationStatus = true;
+        this.$store.state.notificationMessage = message;
+      }
+    },
+    isActive(newState, oldState) {
+      if (oldState == false && newState == true) {
+        const message = `${this.time} lagi kn masuk waktu ${this.nextPrayer.name}`;
+        Push.create(message, {
+          body: "Sedia tah..",
+          icon: require("../../public/img/icons/android-chrome-512x512.png"),
+          timeout: 5000,
+        });
+      }
     },
   },
 };

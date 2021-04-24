@@ -6,6 +6,22 @@
       <router-view></router-view>
     </v-content>
 
+    <v-snackbar
+      :timeout="5000"
+      outlined
+      top
+      centered
+      vertical
+      multi-line
+      color="grey darken-2"
+      v-model="$store.state.notificationStatus"
+    >
+      {{ $store.state.notificationMessage }}
+      <v-btn color="grey" text @click="$store.state.notificationStatus = false">
+        Close
+      </v-btn>
+    </v-snackbar>
+
     <router-view name="bottomNavigation"></router-view>
   </v-app>
 </template>

@@ -8,7 +8,10 @@ import daysModule from "./module/Days";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    notificationStatus: false,
+    notificationMessage: ''
+  },
   mutations: {},
   actions: {},
   modules: {
