@@ -160,6 +160,11 @@ export default {
         Push.create(`Sudah masuk waktu ${this.currentPrayer}`);
       }
     },
+    isActive(newState, oldState) {
+      if (oldState == false && newState == true) {
+        Push.create(`${this.time} lagi kn masuk waktu ${this.nextPrayer.name}`);
+      }
+    },
   },
 };
 </script>
