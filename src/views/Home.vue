@@ -6,7 +6,7 @@
           <v-col class="text-center">
             <!-- Loader -->
             <v-progress-circular
-              v-if="!isDisplayApp"
+              v-if="!days.length"
               indeterminate
               color="primary"
             ></v-progress-circular>
@@ -93,23 +93,7 @@ export default {
       selectedDistrict: "brunei",
       currentPrayerTime: {},
       TodayDate: new Date(),
-      isDisplayApp: false,
-      days: [
-        {
-          name: "Isnin",
-          date: {
-            hijrah: "10 RABIULAKHIR  1441",
-            masihi: "17 DECEMBER 2019",
-          },
-          prayers: [
-            {
-              name: "Imsak",
-              time: "05:00",
-              state: "am",
-            },
-          ],
-        },
-      ],
+      days: [],
       day: {
         today: 0,
         tomorrow: 1,
@@ -123,30 +107,10 @@ export default {
     };
   },
 
-  async created() {
-    await this.$store.dispatch("prayers/getPrayerData");
-
-    let customDateTime = this.$route.query.dt;
-    if (!customDateTime && this.$route.query.debug) {
-      this.todayDate = new Date();
-    } else if (customDateTime) {
-      this.TodayDate = new Date(customDateTime);
-      if (this.$route.query.speed) {
-        setInterval(() => {
-          this.TodayDate = add(this.TodayDate, {
-            [this.$route.query.interval]: 1,
-          });
-        }, this.$route.query.speed);
-      }
-    } else {
-      setInterval(() => {
-        this.TodayDate = new Date();
-      }, 500);
-    }
-
+  mounted() {
+    this.initTodayDate();
     this.registerEventBus();
     this.updateData();
-    this.getDisplayAppStatus();
   },
 
   methods: {
@@ -242,18 +206,32 @@ export default {
       });
     },
 
-    getDisplayAppStatus() {
-      setTimeout(() => {
-        this.isDisplayApp = true;
-      }, 1000);
-    },
-
     addDT(interval) {
       this.TodayDate = add(this.TodayDate, { [interval]: 1 });
     },
 
     subDT(interval) {
       this.TodayDate = sub(this.TodayDate, { [interval]: 1 });
+    },
+
+    initTodayDate() {
+      let customDateTime = this.$route.query.dt;
+      if (!customDateTime && this.$route.query.debug) {
+        this.todayDate = new Date();
+      } else if (customDateTime) {
+        this.TodayDate = new Date(customDateTime);
+        if (this.$route.query.speed) {
+          setInterval(() => {
+            this.TodayDate = add(this.TodayDate, {
+              [this.$route.query.interval]: 1,
+            });
+          }, this.$route.query.speed);
+        }
+      } else {
+        setInterval(() => {
+          this.TodayDate = new Date();
+        }, 500);
+      }
     },
   },
 
