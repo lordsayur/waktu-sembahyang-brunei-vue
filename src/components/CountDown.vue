@@ -163,6 +163,8 @@ export default {
           icon: require("../../public/img/icons/android-chrome-512x512.png"),
           timeout: 5000,
         });
+        this.$store.state.notificationStatus = true;
+        this.$store.state.notificationMessage = message;
       }
     },
     isActive(newState, oldState) {
