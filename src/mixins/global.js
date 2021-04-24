@@ -57,6 +57,18 @@ export default {
       );
     },
 
+    $push(message = "Assalamualaikum", body = "", timeout = 5000) {
+      if (!("Notification" in window)) return;
+
+      if (!Push.Permission.has()) return;
+
+      Push.create(message, {
+        body,
+        icon: require("../../public/img/icons/android-chrome-512x512.png"),
+        timeout,
+      });
+    },
+
     $notify(message) {
       this.$store.commit("notify", message);
     },
