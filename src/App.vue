@@ -13,10 +13,11 @@
       centered
       vertical
       multi-line
-      v-model="$store.state.notificationMsg"
+      color="grey darken-2"
+      v-model="$store.state.notificationStatus"
     >
-      {{ $store.state.notificationMsg }}
-      <v-btn color="pink" text @click="$store.state.notificationMsg = ''">
+      {{ $store.state.notificationMessage }}
+      <v-btn color="grey" text @click="$store.state.notificationStatus = false">
         Close
       </v-btn>
     </v-snackbar>
