@@ -17,6 +17,7 @@
     "url": "https://github.com/LordSayur/waktu-sembahyang-brunei-vue.git"
   },
   "dependencies": {
+    "@mdi/font": "^5.9.55",
     "animate.css": "^4.1.1",
     "core-js": "^3.4.3",
     "date-fns": "^2.21.1",

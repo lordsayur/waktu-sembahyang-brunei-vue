@@ -7,6 +7,8 @@ import vuetify from "./plugins/vuetify";
 
 import globalMixin from "@/mixins/global";
 
+import '@mdi/font/css/materialdesignicons.min.css'
+
 export const eventBus = new Vue();
 
 Vue.config.productionTip = false;
