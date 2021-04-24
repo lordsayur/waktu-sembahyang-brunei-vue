@@ -107,27 +107,8 @@ export default {
     };
   },
 
-  async created() {
-    await this.$store.dispatch("prayers/getPrayerData");
-
-    let customDateTime = this.$route.query.dt;
-    if (!customDateTime && this.$route.query.debug) {
-      this.todayDate = new Date();
-    } else if (customDateTime) {
-      this.TodayDate = new Date(customDateTime);
-      if (this.$route.query.speed) {
-        setInterval(() => {
-          this.TodayDate = add(this.TodayDate, {
-            [this.$route.query.interval]: 1,
-          });
-        }, this.$route.query.speed);
-      }
-    } else {
-      setInterval(() => {
-        this.TodayDate = new Date();
-      }, 500);
-    }
-
+  mounted() {
+    this.initTodayDate();
     this.registerEventBus();
     this.updateData();
   },
@@ -231,6 +212,26 @@ export default {
 
     subDT(interval) {
       this.TodayDate = sub(this.TodayDate, { [interval]: 1 });
+    },
+
+    initTodayDate() {
+      let customDateTime = this.$route.query.dt;
+      if (!customDateTime && this.$route.query.debug) {
+        this.todayDate = new Date();
+      } else if (customDateTime) {
+        this.TodayDate = new Date(customDateTime);
+        if (this.$route.query.speed) {
+          setInterval(() => {
+            this.TodayDate = add(this.TodayDate, {
+              [this.$route.query.interval]: 1,
+            });
+          }, this.$route.query.speed);
+        }
+      } else {
+        setInterval(() => {
+          this.TodayDate = new Date();
+        }, 500);
+      }
     },
   },
 
