@@ -21,6 +21,7 @@ import {
   formatDistanceStrict,
 } from "date-fns";
 import { ms } from "date-fns/locale";
+import Push from "push.js";
 
 /**
  * @group Component
@@ -153,6 +154,11 @@ export default {
       this.currentPrayer = this.getStatus().currentPrayer;
       this.updatePrayerTime();
       this.time = this.updateCountdown();
+    },
+    isIn(newState, oldState) {
+      if (oldState == false && newState == true) {
+        Push.create(`Sudah masuk waktu ${this.currentPrayer}`);
+      }
     },
   },
 };
