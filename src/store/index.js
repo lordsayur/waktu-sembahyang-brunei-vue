@@ -9,7 +9,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    notificationMsg: ''
+    notificationStatus: false,
+    notificationMessage: ''
   },
   mutations: {},
   actions: {},
