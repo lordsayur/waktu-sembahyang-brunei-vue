@@ -1,3 +1,5 @@
+import Push from "push.js";
+
 export default {
   methods: {
     wsbPrint(title, message) {
@@ -30,10 +32,30 @@ export default {
         hour = hour + 12;
       }
 
-      let parsedPrayerTime = new Date(todayDate.getTime())
-      parsedPrayerTime.setHours(hour)
-      parsedPrayerTime.setMinutes(minute)
-      parsedPrayerTime.setSeconds(0)
+      let parsedPrayerTime = new Date(todayDate.getTime());
+      parsedPrayerTime.setHours(hour);
+      parsedPrayerTime.setMinutes(minute);
+      parsedPrayerTime.setSeconds(0);
+
+      return parsedPrayerTime;
+    },
+
+    $requestPushPermission() {
+      if (!("Notification" in window)) return;
+
+      if (Push.Permission.has()) return;
+
+      Push.Permission.request(
+        () => {
+          this.$notify("Push notification is enabled.");
+        },
+        () => {
+          this.$notify(
+            "Push notification is disabled. You can enable it in your browser's settings."
+          );
+        }
+      );
+    },
 
     $notify(message) {
       this.$store.commit("notify", message);
