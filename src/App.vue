@@ -36,9 +36,9 @@ export default {
     "wsb-version": WsbVersion,
   },
 
-  data: () => ({
-    //
-  }),
+  mounted() {
+    this.$requestPushPermission();
+  },
 };
 </script>
 

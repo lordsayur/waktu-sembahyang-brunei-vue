@@ -12,7 +12,12 @@ export default new Vuex.Store({
     notificationStatus: false,
     notificationMessage: ''
   },
-  mutations: {},
+  mutations: {
+    notify(state, message) {
+      state.notificationStatus = true;
+      state.notificationMessage = message
+    }
+  },
   actions: {},
   modules: {
     prayers: prayersModule,

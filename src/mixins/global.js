@@ -1,3 +1,5 @@
+import Push from "push.js";
+
 export default {
   methods: {
     wsbPrint(title, message) {
@@ -30,12 +32,45 @@ export default {
         hour = hour + 12;
       }
 
-      let parsedPrayerTime = new Date(todayDate.getTime())
-      parsedPrayerTime.setHours(hour)
-      parsedPrayerTime.setMinutes(minute)
-      parsedPrayerTime.setSeconds(0)
+      let parsedPrayerTime = new Date(todayDate.getTime());
+      parsedPrayerTime.setHours(hour);
+      parsedPrayerTime.setMinutes(minute);
+      parsedPrayerTime.setSeconds(0);
 
-      return parsedPrayerTime
+      return parsedPrayerTime;
+    },
+
+    $requestPushPermission() {
+      if (!("Notification" in window)) return;
+
+      if (Push.Permission.has()) return;
+
+      Push.Permission.request(
+        () => {
+          this.$notify("Push notification is enabled.");
+        },
+        () => {
+          this.$notify(
+            "Push notification is disabled. You can enable it in your browser's settings."
+          );
+        }
+      );
+    },
+
+    $push(message = "Assalamualaikum", body = "", timeout = 5000) {
+      if (!("Notification" in window)) return;
+
+      if (!Push.Permission.has()) return;
+
+      Push.create(message, {
+        body,
+        icon: require("../../public/img/icons/android-chrome-512x512.png"),
+        timeout,
+      });
+    },
+
+    $notify(message) {
+      this.$store.commit("notify", message);
     },
   },
 };

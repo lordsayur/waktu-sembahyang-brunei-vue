@@ -158,23 +158,14 @@ export default {
     isIn(newState, oldState) {
       if (oldState == false && newState == true) {
         const message = `Sudah masuk waktu ${this.currentPrayer}`;
-        Push.create(message, {
-          body: `Selamat menunaikan solat ${this.currentPrayer}`,
-          icon: require("../../public/img/icons/android-chrome-512x512.png"),
-          timeout: 5000,
-        });
-        this.$store.state.notificationStatus = true;
-        this.$store.state.notificationMessage = message;
+        this.$push(message, `Selamat menunaikan solat ${this.currentPrayer}`);
+        this.$notify(message);
       }
     },
     isActive(newState, oldState) {
       if (oldState == false && newState == true) {
         const message = `${this.time} lagi kn masuk waktu ${this.nextPrayer.name}`;
-        Push.create(message, {
-          body: "Sedia tah..",
-          icon: require("../../public/img/icons/android-chrome-512x512.png"),
-          timeout: 5000,
-        });
+        this.$push(message, "Sedia tah...");
       }
     },
   },
