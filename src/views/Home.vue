@@ -6,7 +6,7 @@
           <v-col class="text-center">
             <!-- Loader -->
             <v-progress-circular
-              v-if="!isDisplayApp"
+              v-if="!days.length"
               indeterminate
               color="primary"
             ></v-progress-circular>
@@ -93,23 +93,7 @@ export default {
       selectedDistrict: "brunei",
       currentPrayerTime: {},
       TodayDate: new Date(),
-      isDisplayApp: false,
-      days: [
-        {
-          name: "Isnin",
-          date: {
-            hijrah: "10 RABIULAKHIR  1441",
-            masihi: "17 DECEMBER 2019",
-          },
-          prayers: [
-            {
-              name: "Imsak",
-              time: "05:00",
-              state: "am",
-            },
-          ],
-        },
-      ],
+      days: [],
       day: {
         today: 0,
         tomorrow: 1,
@@ -146,7 +130,6 @@ export default {
 
     this.registerEventBus();
     this.updateData();
-    this.getDisplayAppStatus();
   },
 
   methods: {
@@ -240,12 +223,6 @@ export default {
         this.selectedDistrict = data;
         this.updateData();
       });
-    },
-
-    getDisplayAppStatus() {
-      setTimeout(() => {
-        this.isDisplayApp = true;
-      }, 1000);
     },
 
     addDT(interval) {
