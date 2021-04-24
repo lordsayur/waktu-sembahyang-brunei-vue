@@ -1,6 +1,38 @@
 module.exports = {
   transpileDependencies: ["vuetify"],
 
-  pluginOptions: {
-  },
+  pwa: {
+    name: "Waktu Sembahyang Brunei",
+    themeColor: '#455A64',
+    msTileColor: '#000000',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    manifestOptions: {
+      name: "Waktu Sembahyang Brunei",
+      short_name: 'WSB',
+      start_url: ".",
+      display: "standalone",
+      theme_color: "#455A64",
+      background_color: "#78909C",
+      icons: [
+        {
+          "src": "/img/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "/img/icons/android-chrome-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+    },
+    iconPaths: {
+      favicon32: 'img/icons/favicon-32x32.png',
+      favicon16: 'img/icons/favicon-16x16.png',
+      appleTouchIcon: 'img/icons/apple-touch-icon-152x152.png',
+      maskIcon: 'img/icons/safari-pinned-tab.svg',
+      msTileImage: 'img/icons/msapplication-icon-144x144.png'
+    }
+  }
 };
