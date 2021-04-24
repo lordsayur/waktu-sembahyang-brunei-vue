@@ -36,6 +36,10 @@ export default {
     "wsb-version": WsbVersion,
   },
 
+  created() {
+    this.$store.dispatch("prayers/getPrayerData");
+  },
+
   mounted() {
     this.$requestPushPermission();
   },
