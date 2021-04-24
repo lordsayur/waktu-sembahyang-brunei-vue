@@ -127,7 +127,9 @@ export default {
     await this.$store.dispatch("prayers/getPrayerData");
 
     let customDateTime = this.$route.query.dt;
-    if (customDateTime) {
+    if (!customDateTime && this.$route.query.debug) {
+      this.todayDate = new Date();
+    } else if (customDateTime) {
       this.TodayDate = new Date(customDateTime);
       if (this.$route.query.speed) {
         setInterval(() => {
