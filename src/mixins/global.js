@@ -35,7 +35,8 @@ export default {
       parsedPrayerTime.setMinutes(minute)
       parsedPrayerTime.setSeconds(0)
 
-      return parsedPrayerTime
+    $notify(message) {
+      this.$store.commit("notify", message);
     },
   },
 };
