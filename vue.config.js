@@ -11,6 +11,7 @@ module.exports = {
       name: "Waktu Sembahyang Brunei",
       short_name: 'WSB',
       start_url: ".",
+      scope: ".",
       display: "standalone",
       theme_color: "#455A64",
       background_color: "#78909C",
@@ -26,6 +27,11 @@ module.exports = {
           "type": "image/png"
         }
       ],
+      workboxPluginMode: 'InjectManifest',
+      workboxOptions: {
+        swSrc: 'service-worker.js',
+        exclude: [/\.map$/, "_redirects"],
+      }
     },
     iconPaths: {
       favicon32: 'img/icons/favicon-32x32.png',
