@@ -2,9 +2,9 @@
   <v-app>
     <wsb-version></wsb-version>
 
-    <v-content>
+    <v-main>
       <router-view></router-view>
-    </v-content>
+    </v-main>
 
     <v-snackbar
       :timeout="5000"
