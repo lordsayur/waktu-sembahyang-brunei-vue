@@ -28,11 +28,6 @@ module.exports = {
           "type": "image/png"
         }
       ],
-      workboxPluginMode: 'InjectManifest',
-      workboxOptions: {
-        swSrc: '/service-worker.js',
-        exclude: [/\.map$/, "_redirects"],
-      }
     },
     iconPaths: {
       favicon32: 'img/icons/favicon-32x32.png',
