@@ -18,7 +18,7 @@
       <span v-html="district.name"></span>
     </v-btn>
     <v-btn text icon @click="refresh">
-      <v-icon>refresh</v-icon>
+      <v-icon>mdi-refresh</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
