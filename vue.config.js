@@ -10,9 +10,10 @@ module.exports = {
     manifestOptions: {
       name: "Waktu Sembahyang Brunei",
       short_name: 'WSB',
-      start_url: ".",
-      scope: ".",
+      start_url: '/',
+      scope: '/',
       display: "standalone",
+      orientation: "portrait-primary",
       theme_color: "#455A64",
       background_color: "#78909C",
       icons: [
@@ -29,7 +30,7 @@ module.exports = {
       ],
       workboxPluginMode: 'InjectManifest',
       workboxOptions: {
-        swSrc: 'service-worker.js',
+        swSrc: '/service-worker.js',
         exclude: [/\.map$/, "_redirects"],
       }
     },
