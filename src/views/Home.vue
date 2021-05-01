@@ -18,7 +18,7 @@
             <!-- DAY -->
             <h1>{{ day.name }}</h1>
 
-            <section id="debug" v-if="debugData.isDebugging">
+            <section id="debug" v-if="IsDebugging">
               <button @click="addDT('hours')">➕</button>
               {{ TodayDate.getHours() }} h
               <button @click="subDT('hours')">➖</button>
@@ -238,9 +238,9 @@ export default {
         );
       }
 
-      this.debugData = JSON.parse(localStorage.getItem("debug_data"));
+      this.debugData = JSON.parse(localStorage.getItem("debug_data")) ?? {};
 
-      if (this.debugData.isDebugging) {
+      if (this.IsDebugging) {
         this.TodayDate = this.debugData.customDateTime
           ? new Date(this.debugData.customDateTime)
           : new Date();
@@ -344,6 +344,10 @@ export default {
       return (
         this.IsFirstHalfNight && this.currentPrayerTime.currentPrayer == "Isya"
       );
+    },
+
+    IsDebugging() {
+      return this.debugData.isDebugging ?? false;
     },
   },
 };
