@@ -3,6 +3,7 @@ const fb = require("@/firebaseConfig.js");
 export default {
   namespaced: true,
   state: {
+    hasData: false,
     prayer_data: {
       january: [],
       february: [],
@@ -61,6 +62,9 @@ export default {
     updateMetaData(state, data) {
       state.metadata = data;
     },
+    updateDataStatus(state, newState) {
+      state.hasData = newState
+    }
   },
 
   getters: {
@@ -118,6 +122,8 @@ let getDataFromLocalStorage = function (context) {
     context.commit("updatePrayer", [month, item]);
   }
 
+  context.commit('updateDataStatus', true)
+
   // save metadata from local storage to metadata vuex state
   context.commit("updateMetaData", localStorage.local_storage_metadata);
 };
@@ -137,6 +143,8 @@ let getDataFromFireBase = async function (context) {
   let fetchedMetadata = await getDatabaseMetaDataFromFirebase();
   context.commit("updateMetaData", fetchedMetadata);
   localStorage.local_storage_metadata = JSON.stringify(fetchedMetadata);
+
+  context.commit('updateDataStatus', true)
 };
 
 let checkNewData = async function () {

@@ -1,66 +1,67 @@
 <template>
-  <v-carousel height="100%" hide-delimiter-background :show-arrows="false">
+  <v-progress-circular
+    id="loader"
+    v-if="!hasData"
+    indeterminate
+    color="primary"
+  />
+  <v-carousel
+    v-else
+    height="100%"
+    hide-delimiter-background
+    :show-arrows="false"
+  >
     <v-carousel-item v-for="(day, dayIndex) in days" :key="dayIndex">
       <v-sheet color="transparent" height="100%" tile>
-        <v-row class="fill-height" align="center" justify="center">
+        <v-row style="height:100%" align="center" justify="center">
           <v-col class="text-center">
-            <!-- Loader -->
-            <v-progress-circular
-              v-if="!days.length"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
+            <!-- DAY -->
+            <h1>{{ day.name }}</h1>
 
-            <div v-else>
-              <!-- DAY -->
-              <h1>{{ day.name }}</h1>
+            <section id="debug" v-if="$route.query.debug">
+              <button @click="addDT('hours')">➕</button>
+              {{ TodayDate.getHours() }} h
+              <button @click="subDT('hours')">➖</button>
+              <button @click="addDT('minutes')">➕</button>
+              {{ TodayDate.getMinutes() }} m
+              <button @click="subDT('minutes')">➖</button>
+              <button @click="addDT('seconds')">➕</button>
+              {{ TodayDate.getSeconds() }} s
+              <button @click="subDT('seconds')">➖</button>
+            </section>
 
-              <section id="debug" v-if="$route.query.debug">
-                <button @click="addDT('hours')">➕</button>
-                {{ TodayDate.getHours() }} h
-                <button @click="subDT('hours')">➖</button>
-                <button @click="addDT('minutes')">➕</button>
-                {{ TodayDate.getMinutes() }} m
-                <button @click="subDT('minutes')">➖</button>
-                <button @click="addDT('seconds')">➕</button>
-                {{ TodayDate.getSeconds() }} s
-                <button @click="subDT('seconds')">➖</button>
-              </section>
+            <!-- DATE  -->
+            <display-info
+              class="date"
+              :left-text="GetMasihiDate(dayIndex)"
+              middle-text="|"
+              :right-text="GetHijrahDate"
+            />
 
-              <!-- DATE  -->
-              <display-info
-                class="date"
-                :left-text="GetMasihiDate(dayIndex)"
-                middle-text="|"
-                :right-text="GetHijrahDate"
-              />
+            <!-- TIMER -->
+            <count-down
+              v-if="dayIndex == 0 && !IsIsyaAndBeforeMidnight"
+              :prayers-data="getTodayPrayerTime"
+              :TodayDate="TodayDate"
+              v-on:updatePrayerTime="updatePrayerTime($event)"
+            />
 
-              <!-- TIMER -->
-              <count-down
-                v-if="dayIndex == 0 && !IsIsyaAndBeforeMidnight"
-                :prayers-data="getTodayPrayerTime"
-                :TodayDate="TodayDate"
-                v-on:updatePrayerTime="updatePrayerTime($event)"
-              />
-
-              <!-- PRAYER TIME -->
-              <display-info
-                v-for="(prayer, prayerIndex) in day.prayers"
-                :key="prayerIndex"
-                class="prayer"
-                :isBeforeZuhur="IsBeforeZuhur"
-                :prayerIndex="prayerIndex"
-                :dayIndex="dayIndex"
-                :left-text="prayer.name"
-                middle-text=":"
-                :right-text="DisplayPrayerTime(prayer)"
-                :isActive="
-                  prayer.name === currentPrayerTime.currentPrayer &&
-                    dayIndex == 0
-                "
-                :prayerTime="currentPrayerTime"
-              />
-            </div>
+            <!-- PRAYER TIME -->
+            <display-info
+              v-for="(prayer, prayerIndex) in day.prayers"
+              :key="prayerIndex"
+              class="prayer"
+              :isBeforeZuhur="IsBeforeZuhur"
+              :prayerIndex="prayerIndex"
+              :dayIndex="dayIndex"
+              :left-text="prayer.name"
+              middle-text=":"
+              :right-text="DisplayPrayerTime(prayer)"
+              :isActive="
+                prayer.name === currentPrayerTime.currentPrayer && dayIndex == 0
+              "
+              :prayerTime="currentPrayerTime"
+            />
           </v-col>
         </v-row>
       </v-sheet>
@@ -75,6 +76,7 @@ import { add, sub, isWithinInterval } from "date-fns";
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
 import CountDown from "@/components/CountDown";
+import { mapState } from "vuex";
 
 /**
  * @group Page
@@ -110,7 +112,15 @@ export default {
   mounted() {
     this.initTodayDate();
     this.registerEventBus();
-    this.updateData();
+    if (this.hasData) this.updateData();
+  },
+
+  watch: {
+    hasData(newData, oldData) {
+      if (newData && !oldData) {
+        this.updateData();
+      }
+    },
   },
 
   methods: {
@@ -202,7 +212,7 @@ export default {
       // Update prayer data if selected district is changed
       eventBus.$on("districtClicked", (data) => {
         this.selectedDistrict = data;
-        this.updateData();
+        if (this.hasData) this.updateData();
       });
     },
 
@@ -236,6 +246,9 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      hasData: (state) => state.prayers.hasData,
+    }),
     getTodayPrayerTime() {
       return this.days[0].prayers;
     },
