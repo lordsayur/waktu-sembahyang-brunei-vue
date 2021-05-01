@@ -18,7 +18,7 @@
             <!-- DAY -->
             <h1>{{ day.name }}</h1>
 
-            <section id="debug" v-if="$route.query.debug">
+            <section id="debug" v-if="debugData.isDebugging">
               <button @click="addDT('hours')">➕</button>
               {{ TodayDate.getHours() }} h
               <button @click="subDT('hours')">➖</button>
@@ -106,6 +106,7 @@ export default {
         tutong: 1,
         belait: 3,
       },
+      debugData: null,
     };
   },
 
@@ -225,17 +226,31 @@ export default {
     },
 
     initTodayDate() {
-      let customDateTime = this.$route.query.dt;
-      if (!customDateTime && this.$route.query.debug) {
-        this.todayDate = new Date();
-      } else if (customDateTime) {
-        this.TodayDate = new Date(customDateTime);
-        if (this.$route.query.speed) {
+      if (this.$route.query.d) {
+        localStorage.setItem(
+          "debug_data",
+          JSON.stringify({
+            isDebugging: this.$route.query.d || false,
+            customDateTime: this.$route.query.dt || "",
+            speed: this.$route.query.s || 1000,
+            interval: this.$route.query.i || "minutes",
+          })
+        );
+      }
+
+      this.debugData = JSON.parse(localStorage.getItem("debug_data"));
+
+      if (this.debugData.isDebugging) {
+        this.TodayDate = this.debugData.customDateTime
+          ? new Date(this.debugData.customDateTime)
+          : new Date();
+
+        if (this.debugData.interval) {
           setInterval(() => {
             this.TodayDate = add(this.TodayDate, {
-              [this.$route.query.interval]: 1,
+              [this.debugData.interval]: 1,
             });
-          }, this.$route.query.speed);
+          }, this.debugData.speed);
         }
       } else {
         setInterval(() => {
