@@ -226,7 +226,7 @@ export default {
     },
 
     initTodayDate() {
-      if (this.$route.query.d) {
+      if (this.$route.query.d || this.$route.query.dt) {
         localStorage.setItem(
           "debug_data",
           JSON.stringify({
@@ -240,7 +240,7 @@ export default {
 
       this.debugData = JSON.parse(localStorage.getItem("debug_data")) ?? {};
 
-      if (this.IsDebugging) {
+      if (this.IsDebugging || this.IsCustomDateTime) {
         this.TodayDate = this.debugData.customDateTime
           ? new Date(this.debugData.customDateTime)
           : new Date();
@@ -350,6 +350,10 @@ export default {
 
     IsDebugging() {
       return this.debugData.isDebugging ?? false;
+    },
+
+    IsCustomDateTime() {
+      return this.debugData.customDateTime ?? "";
     },
   },
 };
