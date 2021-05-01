@@ -350,4 +350,9 @@ export default {
     padding: 0.5rem;
   }
 }
+#loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
 </style>
