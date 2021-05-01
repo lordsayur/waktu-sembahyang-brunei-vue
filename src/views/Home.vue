@@ -35,7 +35,7 @@
               class="date"
               :left-text="GetMasihiDate(dayIndex)"
               middle-text="|"
-              :right-text="GetHijrahDate"
+              :right-text="GetHijrahDate(dayIndex)"
             />
 
             <!-- TIMER -->
@@ -306,21 +306,23 @@ export default {
     },
 
     GetHijrahDate() {
-      const reg = /[0-9]+/m;
-      const today = this.days[0].date.hijrah;
+      return function(offsetDay) {
+        const reg = /[0-9]+/m;
+        const today = this.days[offsetDay].date.hijrah;
 
-      if (
-        this.currentPrayerTime.currentPrayerIndex > 5 &&
-        this.IsFirstHalfNight
-      ) {
-        const day = today.match(reg);
-        const nextDay = +day + 1;
-        const nextDate = today.replace(reg, nextDay);
+        if (
+          this.currentPrayerTime.currentPrayerIndex > 5 &&
+          this.IsFirstHalfNight
+        ) {
+          const day = today.match(reg);
+          const nextDay = +day + 1;
+          const nextDate = today.replace(reg, nextDay);
 
-        return nextDay < 10 ? "0" + nextDate : nextDate;
-      }
+          return nextDay < 10 ? "0" + nextDate : nextDate;
+        }
 
-      return today;
+        return today;
+      };
     },
 
     IsFirstHalfNight() {
