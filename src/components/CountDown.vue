@@ -147,26 +147,35 @@ export default {
   },
 
   watch: {
-    TodayDate() {
-      this.currentTime = this.$props.TodayDate;
+    TodayDate: {
+      handler() {
+        this.currentTime = this.$props.TodayDate;
 
-      this.nextPrayer = this.getStatus().nextPrayer;
-      this.currentPrayer = this.getStatus().currentPrayer;
-      this.updatePrayerTime();
-      this.time = this.updateCountdown();
+        this.nextPrayer = this.getStatus().nextPrayer;
+        this.currentPrayer = this.getStatus().currentPrayer;
+        this.updatePrayerTime();
+        this.time = this.updateCountdown();
+      },
+      immediate: true,
     },
-    isIn(newState, oldState) {
-      if (oldState == false && newState == true) {
-        const message = `Sudah masuk waktu ${this.currentPrayer}`;
-        this.$push(message, `Selamat menunaikan solat ${this.currentPrayer}`);
-        this.$notify(message);
-      }
+    isIn: {
+      handler(newState, oldState) {
+        if (oldState == false && newState == true) {
+          const message = `Sudah masuk waktu ${this.currentPrayer}`;
+          this.$push(message, `Selamat menunaikan solat ${this.currentPrayer}`);
+          this.$notify(message);
+        }
+      },
+      immediate: true,
     },
-    isActive(newState, oldState) {
-      if (oldState == false && newState == true) {
-        const message = `${this.time} lagi kn masuk waktu ${this.nextPrayer.name}`;
-        this.$push(message, "Sedia tah...");
-      }
+    isActive: {
+      handler(newState, oldState) {
+        if (oldState == false && newState == true) {
+          const message = `${this.time} lagi kn masuk waktu ${this.nextPrayer.name}`;
+          this.$push(message, "Sedia tah...");
+        }
+      },
+      immediate: true,
     },
   },
 };
