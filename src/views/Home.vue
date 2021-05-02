@@ -1,66 +1,67 @@
 <template>
-  <v-carousel height="100%" hide-delimiter-background :show-arrows="false">
+  <v-progress-circular
+    id="loader"
+    v-if="!hasData"
+    indeterminate
+    color="primary"
+  />
+  <v-carousel
+    v-else
+    height="100%"
+    hide-delimiter-background
+    :show-arrows="false"
+  >
     <v-carousel-item v-for="(day, dayIndex) in days" :key="dayIndex">
       <v-sheet color="transparent" height="100%" tile>
-        <v-row class="fill-height" align="center" justify="center">
+        <v-row style="height:100%" align="center" justify="center">
           <v-col class="text-center">
-            <!-- Loader -->
-            <v-progress-circular
-              v-if="!days.length"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
+            <!-- DAY -->
+            <h1>{{ day.name }}</h1>
 
-            <div v-else>
-              <!-- DAY -->
-              <h1>{{ day.name }}</h1>
+            <section id="debug" v-if="IsDebugging">
+              <button @click="addDT('hours')">➕</button>
+              {{ TodayDate.getHours() }} h
+              <button @click="subDT('hours')">➖</button>
+              <button @click="addDT('minutes')">➕</button>
+              {{ TodayDate.getMinutes() }} m
+              <button @click="subDT('minutes')">➖</button>
+              <button @click="addDT('seconds')">➕</button>
+              {{ TodayDate.getSeconds() }} s
+              <button @click="subDT('seconds')">➖</button>
+            </section>
 
-              <section id="debug" v-if="$route.query.debug">
-                <button @click="addDT('hours')">➕</button>
-                {{ TodayDate.getHours() }} h
-                <button @click="subDT('hours')">➖</button>
-                <button @click="addDT('minutes')">➕</button>
-                {{ TodayDate.getMinutes() }} m
-                <button @click="subDT('minutes')">➖</button>
-                <button @click="addDT('seconds')">➕</button>
-                {{ TodayDate.getSeconds() }} s
-                <button @click="subDT('seconds')">➖</button>
-              </section>
+            <!-- DATE  -->
+            <display-info
+              class="date"
+              :left-text="GetMasihiDate(dayIndex)"
+              middle-text="|"
+              :right-text="GetHijrahDate(dayIndex)"
+            />
 
-              <!-- DATE  -->
-              <display-info
-                class="date"
-                :left-text="GetMasihiDate(dayIndex)"
-                middle-text="|"
-                :right-text="GetHijrahDate"
-              />
+            <!-- TIMER -->
+            <count-down
+              v-if="dayIndex == 0 && !IsIsyaAndBeforeMidnight"
+              :prayers-data="getTodayPrayerTime"
+              :TodayDate="TodayDate"
+              v-on:updatePrayerTime="updatePrayerTime($event)"
+            />
 
-              <!-- TIMER -->
-              <count-down
-                v-if="dayIndex == 0 && !IsIsyaAndBeforeMidnight"
-                :prayers-data="getTodayPrayerTime"
-                :TodayDate="TodayDate"
-                v-on:updatePrayerTime="updatePrayerTime($event)"
-              />
-
-              <!-- PRAYER TIME -->
-              <display-info
-                v-for="(prayer, prayerIndex) in day.prayers"
-                :key="prayerIndex"
-                class="prayer"
-                :isBeforeZuhur="IsBeforeZuhur"
-                :prayerIndex="prayerIndex"
-                :dayIndex="dayIndex"
-                :left-text="prayer.name"
-                middle-text=":"
-                :right-text="DisplayPrayerTime(prayer)"
-                :isActive="
-                  prayer.name === currentPrayerTime.currentPrayer &&
-                    dayIndex == 0
-                "
-                :prayerTime="currentPrayerTime"
-              />
-            </div>
+            <!-- PRAYER TIME -->
+            <display-info
+              v-for="(prayer, prayerIndex) in day.prayers"
+              :key="prayerIndex"
+              class="prayer"
+              :isBeforeZuhur="IsBeforeZuhur"
+              :prayerIndex="prayerIndex"
+              :dayIndex="dayIndex"
+              :left-text="prayer.name"
+              middle-text=":"
+              :right-text="DisplayPrayerTime(prayer)"
+              :isActive="
+                prayer.name === currentPrayerTime.currentPrayer && dayIndex == 0
+              "
+              :prayerTime="currentPrayerTime"
+            />
           </v-col>
         </v-row>
       </v-sheet>
@@ -75,6 +76,7 @@ import { add, sub, isWithinInterval } from "date-fns";
 // Component
 import DisplayInfo from "@/components/DisplayInfo";
 import CountDown from "@/components/CountDown";
+import { mapState } from "vuex";
 
 /**
  * @group Page
@@ -104,13 +106,22 @@ export default {
         tutong: 1,
         belait: 3,
       },
+      debugData: null,
     };
   },
 
   mounted() {
     this.initTodayDate();
     this.registerEventBus();
-    this.updateData();
+    if (this.hasData) this.updateData();
+  },
+
+  watch: {
+    hasData(newData, oldData) {
+      if (newData && !oldData) {
+        this.updateData();
+      }
+    },
   },
 
   methods: {
@@ -202,7 +213,7 @@ export default {
       // Update prayer data if selected district is changed
       eventBus.$on("districtClicked", (data) => {
         this.selectedDistrict = data;
-        this.updateData();
+        if (this.hasData) this.updateData();
       });
     },
 
@@ -215,17 +226,31 @@ export default {
     },
 
     initTodayDate() {
-      let customDateTime = this.$route.query.dt;
-      if (!customDateTime && this.$route.query.debug) {
-        this.todayDate = new Date();
-      } else if (customDateTime) {
-        this.TodayDate = new Date(customDateTime);
-        if (this.$route.query.speed) {
+      if (this.$route.query.d || this.$route.query.dt) {
+        localStorage.setItem(
+          "debug_data",
+          JSON.stringify({
+            isDebugging: this.$route.query.d || false,
+            customDateTime: this.$route.query.dt || "",
+            speed: this.$route.query.s || 1000,
+            interval: this.$route.query.i || "minutes",
+          })
+        );
+      }
+
+      this.debugData = JSON.parse(localStorage.getItem("debug_data")) ?? {};
+
+      if (this.IsDebugging || this.IsCustomDateTime) {
+        this.TodayDate = this.debugData.customDateTime
+          ? new Date(this.debugData.customDateTime)
+          : new Date();
+
+        if (this.debugData.interval) {
           setInterval(() => {
             this.TodayDate = add(this.TodayDate, {
-              [this.$route.query.interval]: 1,
+              [this.debugData.interval]: 1,
             });
-          }, this.$route.query.speed);
+          }, this.debugData.speed);
         }
       } else {
         setInterval(() => {
@@ -236,6 +261,9 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      hasData: (state) => state.prayers.hasData,
+    }),
     getTodayPrayerTime() {
       return this.days[0].prayers;
     },
@@ -278,21 +306,23 @@ export default {
     },
 
     GetHijrahDate() {
-      const reg = /[0-9]+/m;
-      const today = this.days[0].date.hijrah;
+      return function(offsetDay) {
+        const reg = /[0-9]+/m;
+        const today = this.days[offsetDay].date.hijrah;
 
-      if (
-        this.currentPrayerTime.currentPrayerIndex > 5 &&
-        this.IsFirstHalfNight
-      ) {
-        const day = today.match(reg);
-        const nextDay = +day + 1;
-        const nextDate = today.replace(reg, nextDay);
+        if (
+          this.currentPrayerTime.currentPrayerIndex > 5 &&
+          this.IsFirstHalfNight
+        ) {
+          const day = today.match(reg);
+          const nextDay = +day + 1;
+          const nextDate = today.replace(reg, nextDay);
 
-        return nextDay < 10 ? "0" + nextDate : nextDate;
-      }
+          return nextDay < 10 ? "0" + nextDate : nextDate;
+        }
 
-      return today;
+        return today;
+      };
     },
 
     IsFirstHalfNight() {
@@ -317,6 +347,14 @@ export default {
         this.IsFirstHalfNight && this.currentPrayerTime.currentPrayer == "Isya"
       );
     },
+
+    IsDebugging() {
+      return this.debugData.isDebugging ?? false;
+    },
+
+    IsCustomDateTime() {
+      return this.debugData.customDateTime ?? "";
+    },
   },
 };
 </script>
@@ -336,5 +374,10 @@ export default {
   button {
     padding: 0.5rem;
   }
+}
+#loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 </style>
