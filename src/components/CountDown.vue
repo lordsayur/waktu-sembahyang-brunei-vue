@@ -22,6 +22,8 @@ import {
 } from "date-fns";
 import { ms } from "date-fns/locale";
 import Push from "push.js";
+import useSound from "vue-use-sound";
+import azanSound from "../assets/azan.mp3";
 
 /**
  * @group Component
@@ -62,6 +64,10 @@ export default {
   },
 
   methods: {
+    playAzan() {
+      let audio = new Audio(azanSound);
+      audio.play();
+    },
     getStatus() {
       let currentPrayer = "";
       let currentPrayerIndex = 0;
@@ -163,6 +169,7 @@ export default {
         if (oldState == false && newState == true) {
           const message = `Sudah masuk waktu ${this.currentPrayer}`;
           this.$push(message, `Selamat menunaikan solat ${this.currentPrayer}`);
+          this.playAzan();
           this.$notify(message);
         }
       },
