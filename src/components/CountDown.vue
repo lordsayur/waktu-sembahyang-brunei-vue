@@ -22,7 +22,6 @@ import {
 } from "date-fns";
 import { ms } from "date-fns/locale";
 import Push from "push.js";
-import useSound from "vue-use-sound";
 import azanSound from "../assets/azan.mp3";
 
 /**
