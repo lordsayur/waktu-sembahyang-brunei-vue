@@ -65,7 +65,7 @@ export default {
   methods: {
     playAzan() {
       let audio = new Audio(azanSound);
-      audio.play();
+      audio && audio.play();
     },
     getStatus() {
       let currentPrayer = "";
