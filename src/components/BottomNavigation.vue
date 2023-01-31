@@ -55,6 +55,7 @@ export default {
 
   mounted() {
     this.selectedDistrict = this.getSelectedDistrict();
+    this.updateSelectedDistrict(this.selectedDistrict);
   },
 
   methods: {
@@ -62,10 +63,6 @@ export default {
       return localStorage.getItem("selectedDistrict") || "Brunei";
     },
     updateSelectedDistrict(selectedDistrict) {
-      // Stop this function if recently clicked district if the same as
-      // currently selected district
-      if (this.selectedDistrict === selectedDistrict) return;
-
       // Fire when the selected district is changed.
       // @arg The argument is a string value representing the text of the selected district
       eventBus.$emit("districtClicked", selectedDistrict);
