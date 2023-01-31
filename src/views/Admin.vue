@@ -37,15 +37,39 @@
       <v-btn color="primary" class="mx-1">Home</v-btn>
     </router-link>
 
-    <ol>
-      <li v-for="(line, index) in result" :key="index">
-        <ul>
-          <li v-for="(value, key) in line" :key="key">
-            {{ key }} - {{ value }}
-          </li>
-        </ul>
-      </li>
-    </ol>
+    <v-simple-table v-if="result.length > 0">
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th
+              v-for="(header, index) in headers"
+              :key="index"
+              class="text-left"
+            >
+              {{ header.text }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(data, index) in result" :key="index">
+            <td>{{ data.Date }}</td>
+            <td>
+              <button type="button" @click="updateDay(1, index)">+</button>
+              <input type="text" v-model="data.Tarikh" class="px-2" />
+              <button type="button" @click="updateDay(-1, index)">-</button>
+            </td>
+            <td>{{ data.Imsak }}</td>
+            <td>{{ data.Subuh }}</td>
+            <td>{{ data.Syuruk }}</td>
+            <td>{{ data.Duha }}</td>
+            <td>{{ data.Zuhur }}</td>
+            <td>{{ data.Asar }}</td>
+            <td>{{ data.Maghrib }}</td>
+            <td>{{ data.Isya }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
 
     <v-snackbar v-model="state.isUploaded">
       Upload successful
@@ -56,6 +80,7 @@
 
 <script>
 const fb = require("@/firebaseConfig.js");
+import Vue from "vue";
 
 /**
  * @group Page
@@ -69,13 +94,25 @@ export default {
       selected_month: 0,
       months: {},
       originalText: "",
-      result: "",
+      result: [],
       days: [],
       state: {
         isUploadable: false,
         isUploaded: false,
         isProcessing: false,
       },
+      headers: [
+        { text: "Date", value: "Date" },
+        { text: "Tarikh", value: "Tarikh" },
+        { text: "Imsak", value: "Imsak" },
+        { text: "Subuh", value: "Subuh" },
+        { text: "Syuruk", value: "Syuruk" },
+        { text: "Duha", value: "Duha" },
+        { text: "Zuhur", value: "Zuhur" },
+        { text: "Asar", value: "Asar" },
+        { text: "Maghrib", value: "Maghrib" },
+        { text: "Isya", value: "Isya" },
+      ],
     };
   },
 
@@ -149,6 +186,19 @@ export default {
       return (text) => {
         return text.split(splitBy);
       };
+    },
+
+    updateDay(amount, index) {
+      const tarikh = this.result[index].Tarikh;
+      const tarikhSplitted = tarikh.split(" ");
+      let day = +tarikhSplitted[0];
+      day += amount;
+
+      Vue.set(
+        this.result[index],
+        "Tarikh",
+        `${day} ${tarikhSplitted[1]} ${tarikhSplitted[2]}`
+      );
     },
   },
 
