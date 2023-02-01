@@ -60,7 +60,7 @@ export default {
 
   methods: {
     getSelectedDistrict() {
-      return localStorage.getItem("selectedDistrict") || "Brunei";
+      return localStorage.getItem("selectedDistrict") || "brunei";
     },
     updateSelectedDistrict(selectedDistrict) {
       // Fire when the selected district is changed.
