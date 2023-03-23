@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "version:alpha-update": "npm version prerelease --preid=alpha",
+    "firebase:emulator": "firebase emulators:start",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
@@ -21,7 +22,7 @@
     "animate.css": "^4.1.1",
     "core-js": "^3.11.0",
     "date-fns": "^2.21.1",
-    "firebase": "^7.24.0",
+    "firebase": "^8.10.1",
     "lodash": "^4.17.21",
     "push.js": "^1.0.12",
     "register-service-worker": "^1.7.2",
