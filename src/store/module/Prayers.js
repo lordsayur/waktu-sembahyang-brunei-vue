@@ -176,15 +176,14 @@ let checkNewData = async function() {
 
 let getDataFromFirebaseAndSaveToPrayerModule = async function(context) {
   try {
-    const documents = await getPrayers();
+    const prayers = await getPrayers();
     let index = 0;
-    documents.forEach((doc) => {
+    prayers.forEach((prayerData) => {
       if (index > 11) {
         return;
       }
-      let item = doc.data().Day;
       let month = context.rootGetters["months/getComputerMonthName"](index);
-      context.commit("updatePrayer", [month, item]);
+      context.commit("updatePrayer", [month, prayerData]);
       index++;
     });
   } catch (error) {
@@ -194,12 +193,7 @@ let getDataFromFirebaseAndSaveToPrayerModule = async function(context) {
 
 let getDatabaseMetaDataFromFirebase = async function() {
   try {
-    const fbMetaData = await getMetadata();
-    let fetchedMetadata;
-    fbMetaData.forEach((metadata) => {
-      fetchedMetadata = metadata.data().data;
-    });
-    return fetchedMetadata;
+    return await getMetadata();
   } catch (error) {
     console.error(error);
   }
