@@ -5,7 +5,8 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueGtag from "vue-gtag";
-import { useEmulatorForDevelopment } from "@/infrastructure/firebase/firestore";
+import { useFirestoreEmulator } from "@/infrastructure/firebase/firestore";
+import { useAuthEmulator } from "@/infrastructure/firebase/auth";
 
 import globalMixin from "@/mixins/global";
 
@@ -26,7 +27,10 @@ Vue.mixin(globalMixin);
 init();
 
 async function init() {
-  await useEmulatorForDevelopment();
+  if (process.env.NODE_ENV != "production") {
+    await useFirestoreEmulator();
+    await useAuthEmulator();
+  }
 
   new Vue({
     router,

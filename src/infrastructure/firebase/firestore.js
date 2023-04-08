@@ -67,11 +67,7 @@ export async function getMetadata() {
   }
 }
 
-export async function useEmulatorForDevelopment() {
-  if (process.env.NODE_ENV === "production") {
-    return;
-  }
-
+export async function useFirestoreEmulator() {
   useFirebaseEmulator();
 
   await clearLocalStorageAndFlushFirestore();

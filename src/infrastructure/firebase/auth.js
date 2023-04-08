@@ -1,13 +1,18 @@
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  connectAuthEmulator,
+} from "firebase/auth";
+
 import { firebase } from "./index";
 import fbConfig from "../../../firebase.json";
 
-const { auth } = initializeAuth();
-
-useEmulatorForDevelopment();
-
-export async function createUserWithEmailAndPassword(email, password) {
+export async function createUser(email, password) {
   try {
-    const userCredential = await auth().createUserWithEmailAndPassword(
+    const userCredential = await createUserWithEmailAndPassword(
+      getAuthInstance(),
       email,
       password
     );
@@ -27,14 +32,15 @@ export async function createUserWithEmailAndPassword(email, password) {
 }
 
 export function getCurrentUser() {
-  const user = auth().currentUser;
+  const user = getAuthInstance()().currentUser;
 
   return user;
 }
 
-export async function signIn(email, password) {
+export async function signInUser(email, password) {
   try {
-    const userCredential = await auth().signInWithEmailAndPassword(
+    const userCredential = await signInWithEmailAndPassword(
+      getAuthInstance(),
       email,
       password
     );
@@ -52,26 +58,45 @@ export async function signIn(email, password) {
   }
 }
 
-export async function signOut() {
+export async function signOutUser() {
   try {
-    await auth().signOut();
+    await signOut(getAuthInstance());
   } catch (error) {
     console.error("[Sign Out]", error);
   }
 }
 
-function initializeAuth() {
-  return { auth: firebase.auth };
+function getAuthInstance() {
+  return getAuth(firebase);
 }
 
-function useEmulatorForDevelopment() {
-  if (process.env.NODE_ENV !== "production") {
-    auth().useEmulator("http://localhost:" + fbConfig.emulators.auth.port);
-    seedData();
-    console.info("[firebase/auth]Using authentication emulator");
+export async function useAuthEmulator() {
+  connectAuthEmulator(
+    getAuthInstance(),
+    "http://localhost:" + fbConfig.emulators.auth.port,
+    { disableWarnings: true }
+  );
+  console.info("[Development] Using authentication emulator. ✅");
+
+  await seedData();
+}
+
+async function seedData() {
+  try {
+    console.info("[Development] Seeding user. ⌛");
+
+    await createUserWithEmailAndPassword(
+      getAuthInstance(),
+      "admin@wsb.com",
+      "!Password1"
+    ).catch((e) => {
+      const errorData = e.customData._tokenResponse.error;
+      if (+errorData.code !== 400) {
+        throw e;
+      }
+    });
+    console.info("[Development] User seeded. ✅");
+  } catch (error) {
+    console.error(error);
   }
-}
-
-function seedData() {
-  createUserWithEmailAndPassword("admin@wsb.com", "!Password1");
 }
