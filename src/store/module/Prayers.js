@@ -1,4 +1,4 @@
-const fb = require("@/firebaseConfig.js");
+import { getPrayers, getMetadata } from "@/infrastructure/firebase/firestore";
 
 export default {
   namespaced: true,
@@ -63,8 +63,8 @@ export default {
       state.metadata = data;
     },
     updateDataStatus(state, newState) {
-      state.hasData = newState
-    }
+      state.hasData = newState;
+    },
   },
 
   getters: {
@@ -113,7 +113,7 @@ export default {
   },
 };
 
-let getDataFromLocalStorage = function (context) {
+let getDataFromLocalStorage = function(context) {
   console.log("Fetching data from local storage...");
   // Get data from local storage
   // save data to prayer_data vuex state
@@ -122,13 +122,13 @@ let getDataFromLocalStorage = function (context) {
     context.commit("updatePrayer", [month, item]);
   }
 
-  context.commit('updateDataStatus', true)
+  context.commit("updateDataStatus", true);
 
   // save metadata from local storage to metadata vuex state
   context.commit("updateMetaData", localStorage.local_storage_metadata);
 };
 
-let getDataFromFireBase = async function (context) {
+let getDataFromFireBase = async function(context) {
   console.log("Fetching data from Firebase...");
 
   // Get prayer data from firebase
@@ -144,10 +144,10 @@ let getDataFromFireBase = async function (context) {
   context.commit("updateMetaData", fetchedMetadata);
   localStorage.local_storage_metadata = JSON.stringify(fetchedMetadata);
 
-  context.commit('updateDataStatus', true)
+  context.commit("updateDataStatus", true);
 };
 
-let checkNewData = async function () {
+let checkNewData = async function() {
   try {
     // return false if no data is available in local storage
     if (localStorage.local_storage_metadata === undefined) {
@@ -174,17 +174,16 @@ let checkNewData = async function () {
   }
 };
 
-let getDataFromFirebaseAndSaveToPrayerModule = async function (context) {
+let getDataFromFirebaseAndSaveToPrayerModule = async function(context) {
   try {
-    let documents = await fb.waktuCollection.get();
+    const prayers = await getPrayers();
     let index = 0;
-    documents.forEach((doc) => {
+    prayers.forEach((prayerData) => {
       if (index > 11) {
         return;
       }
-      let item = doc.data().Day;
       let month = context.rootGetters["months/getComputerMonthName"](index);
-      context.commit("updatePrayer", [month, item]);
+      context.commit("updatePrayer", [month, prayerData]);
       index++;
     });
   } catch (error) {
@@ -192,14 +191,9 @@ let getDataFromFirebaseAndSaveToPrayerModule = async function (context) {
   }
 };
 
-let getDatabaseMetaDataFromFirebase = async function () {
+let getDatabaseMetaDataFromFirebase = async function() {
   try {
-    let fbMetaData = await fb.DatabaseMetaData.get();
-    let fetchedMetadata;
-    fbMetaData.forEach((metadata) => {
-      fetchedMetadata = metadata.data().data;
-    });
-    return fetchedMetadata;
+    return await getMetadata();
   } catch (error) {
     console.error(error);
   }
