@@ -113,13 +113,6 @@ export default {
       }
       let prayerTime = this.$props.prayersData[nextPrayerIndex];
 
-      // https://github.com/lordsayur/waktu-sembahyang-brunei-vue/issues/15
-      // force reload web app when date of the day is changed
-      if (nextPrayerIndex == 8 && prayerTime.time.getDate() == this.currentTime.getDate()) {
-        location.reload()
-        return;
-      }
-
       if (differenceInMinutes(prayerTime.time, this.currentTime) < 60) {
         return formatDistanceStrict(this.currentTime, prayerTime.time, {
           roundingMethod: "ceil",
