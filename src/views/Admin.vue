@@ -79,8 +79,11 @@
 </template>
 
 <script>
-const fb = require("@/firebaseConfig.js");
 import Vue from "vue";
+import {
+  updatePrayerByMonth,
+  updateMetadata,
+} from "@/infrastructure/firebase/firestore";
 
 /**
  * @group Page
@@ -162,17 +165,13 @@ export default {
         this.state.isProcessing = true;
 
         // upload prayer data to firebase
-        await fb.waktuCollection.doc(`${this.selected_month}`).set({
-          Day: this.days,
-        });
+        await updatePrayerByMonth(this.selected_month, this.days);
 
         // get current metadata version, increment it, and update firebase meta data version
         let localMetadata = this.$store.getters["prayers/getMetaData"];
         localMetadata = JSON.parse(localMetadata);
 
-        await fb.DatabaseMetaData.doc("data").set({
-          data: { version: localMetadata.version + 1 },
-        });
+        await updateMetadata(localMetadata.version + 1);
         console.log("New metadata version", localMetadata.version + 1);
 
         this.state.isProcessing = false;

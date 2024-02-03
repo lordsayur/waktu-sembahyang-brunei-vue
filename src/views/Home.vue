@@ -122,6 +122,12 @@ export default {
         this.updateData();
       }
     },
+    TodayDate(todayDate) {
+      const currentImsakPrayerDataDate = this.days[0].prayers[0].time.getDate();
+      if (this.hasData && todayDate.getDate() != currentImsakPrayerDataDate) {
+        this.updateData()
+      }
+    }
   },
 
   methods: {

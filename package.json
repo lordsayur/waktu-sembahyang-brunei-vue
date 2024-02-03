@@ -3,25 +3,22 @@
   "version": "3.0.0",
   "private": true,
   "scripts": {
-    "version:alpha-update": "npm version prerelease --preid=alpha",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
+    "firebase:emulator": "firebase emulators:start",
     "generate:vuese": "vuese gen",
-    "serve:vuese": "vuese serve --open"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/LordSayur/waktu-sembahyang-brunei-vue.git"
+    "serve:vuese": "vuese serve --open",
+    "version:alpha-update": "npm version prerelease --preid=alpha"
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
     "animate.css": "^4.1.1",
     "core-js": "^3.11.0",
     "date-fns": "^2.21.1",
-    "firebase": "^7.24.0",
+    "firebase": "^9.19.1",
     "lodash": "^4.17.21",
     "push.js": "^1.0.12",
     "register-service-worker": "^1.7.2",
@@ -43,6 +40,7 @@
     "@vue/cli-service": "^4.5.12",
     "@vue/eslint-config-prettier": "^5.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
+    "axios": "^0.18.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.4.0",
@@ -54,5 +52,9 @@
     "vue-cli-plugin-vuetify": "^2.3.1",
     "vue-template-compiler": "^2.6.12",
     "vuetify-loader": "^1.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LordSayur/waktu-sembahyang-brunei-vue.git"
   }
 }
