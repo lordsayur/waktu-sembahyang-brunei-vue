@@ -62,6 +62,16 @@
               "
               :prayerTime="currentPrayerTime"
             />
+
+            <!-- Reference -->
+            <p id="reference">
+              Sumber:
+              <a
+                href="https://www.mora.gov.bn/lists/waktusolat/waktusolat.aspx"
+              >
+                KHEU
+              </a>
+            </p>
           </v-col>
         </v-row>
       </v-sheet>
@@ -125,9 +135,9 @@ export default {
     TodayDate(todayDate) {
       const currentImsakPrayerDataDate = this.days[0].prayers[0].time.getDate();
       if (this.hasData && todayDate.getDate() != currentImsakPrayerDataDate) {
-        this.updateData()
+        this.updateData();
       }
-    }
+    },
   },
 
   methods: {
@@ -385,5 +395,16 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
+}
+#reference {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  color: gray;
+
+  a {
+    color: lightslategray;
+  }
 }
 </style>
