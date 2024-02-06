@@ -69,7 +69,7 @@
               <a
                 href="https://www.mora.gov.bn/lists/waktusolat/waktusolat.aspx"
               >
-                Kementrian Hal Ehwal Ugama Brunei Darussalam
+                KHEU
               </a>
             </p>
           </v-col>
